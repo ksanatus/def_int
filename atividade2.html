@@ -104,26 +104,30 @@
         <input type="text" id="functionInput" value="x^2">
         <button onclick="updateFunction()">Atualizar Função</button>
     </div>
+    
     <div id="sliders">
         <div class="slider-container">
             <label for="x1Slider">Limite inferior a:</label>
             <span id="x1Value">1</span><br>
             <div id="x1Slider"></div>
         </div>
+
         <div class="slider-container">
             <label for="x2Slider">Limite superior x:</label>
             <span id="x2Value">2</span><br>
             <div id="x2Slider"></div>
         </div>
+
         <div class="slider-container">
             <label for="hSlider">Valor de h:</label>
             <span id="hValue">0.5</span><br>
             <div id="hSlider"></div>
         </div>
     </div>
-    <div id="integralValues">
-        <div id="integralExpression"></div>
-        <div id="variationExpression"></div>
+    <div id="integralValues"></div>
+    <div id="integralExpression"></div>
+    <div id="variationExpression"></div>
+    <div id = "hExpression"></div>
     </div>
 </div>
 
@@ -241,6 +245,7 @@
 
         // Atualizar o painel lateral com as expressões
         document.getElementById('integralExpression').innerHTML = `$$F(x) = \\int_{${x1.toFixed(2)}}^{${x2.toFixed(2)}} f(x) \\, dx = ${integralX.toFixed(2)}$$`;
+        document.getElementById('hExpression').innerHTML = `$$h = ${h.toFixed(2)}$$`;
         document.getElementById('variationExpression').innerHTML = `$$F(x+h) = \\int_{${x1.toFixed(2)}}^{${(x2 + h).toFixed(2)}} f(x) \\, dx = ${integralXPlusH.toFixed(2)}$$`;
         document.getElementById('variationExpression').innerHTML += `<br> $$F(x+h) - F(x) = \\int_{${x2.toFixed(2)}}^{${(x2 + h).toFixed(2)}} f(x) \\, dx = ${variation.toFixed(2)}$$`;
 
