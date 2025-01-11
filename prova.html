@@ -68,8 +68,17 @@
         .footer button:hover {
             background-color: #0056b3;
         }
+        h4 {
+            font-size: 1.5rem;
+            color: #000000;
+            margin-bottom: 30px;
+            text-align: left;
+        }
     </style>
 </head>
+    <!-- Script externo MathJax -->
+    <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 <body>
 
     <h1>Teorema Fundamental do Cálculo</h1>
@@ -83,25 +92,38 @@
 
     <!-- Conteúdo das atividades -->
     <div id="activity1" class="activity-content active">
-        <h2>Atividade 1: verificar que a integral definida é limitada </h2>
+        <h4><p>A integral definida  \( \int_{a}^{b} f(x) \, dx \) é limitada por dois retângulos. Sejam \(b-a  = h\). 
+            Um retângulo tem área \( m \cdot h \) e 
+           e, o outro, tem área \( M \cdot h\).</p>
+            <p>De acordo com o Teorema do Valor Intermediário, 
+            existe um ponto \( c \in [a, b] \) tal que a área de um retângulo com base \( (b-a) \) e altura \( F(c) = L \) 
+            é igual à integral \( \int_{a}^{b} f(x) \, dx \). Dessa forma podemos dizer que \( m \cdot h \leq \int_{a}^{b} f(x) \, dx \leq M \cdot h \) </p>
+            </h4>
         <iframe src="atividade1.html" width="100%" height="800px"></iframe>
     </div>
 
     <div id="activity2" class="activity-content">
-        <h2>Atividade 2</h2>
-        <p>Aqui ficará o conteúdo da Atividade 2.</p>
+        <h4>A variação de \( F(x)\), dada por \( F(x+h) - F(x)\) 
+            corresponde a integral \( \int_{x}^{x+h} f(t) \, dt \)</h4>
         <iframe src="atividade2.html" width="100%" height="800px"></iframe>
     </div>
 
     <div id="activity3" class="activity-content">
-        <h2>Atividade 3</h2>
-        <p>Aqui ficará o conteúdo da Atividade 3.</p>
+        <h4>Quando \( h \to 0 \), a variação de \( F(x) \), dada por \( \frac{F(x+h) - F(x)}{h} \), 
+            se aproxima da derivada \( F'(x) \).</h4>
+
+        <h4>Além disso, a integral \( \int_{x}^{x+h} f(t) \, dt \)
+            se aproxima de \( f(x) \cdot h \).</h4>
+        <h4>Como \( f(x) \) varia pouco com \(h\) muito pequeno, concluimos que \( f(x) = F'(x) \).</h4>
+        
+        
+        
         <iframe src="atividade3.html" width="100%" height="800px"></iframe>
     </div>
-        <div class="footer">
+    <div class="footer">
         <button onclick="window.location.href='index.html'">Voltar à Página Principal</button>
-        <button onclick="window.location.href='integral_definida.html'">Voltar à Parte 1</button>
-        <button onclick="window.location.href='teorema_fundamental.html'">Ir à Parte 3</button>
+        <button onclick="window.location.href='integral_definida.html'">Voltar para a Parte 1</button>
+        <button onclick="window.location.href='teorema_fundamental.html'">Ir para a Parte 3</button>
     </div>
 
     <script>
