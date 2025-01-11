@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Integral Definida como você nunca viu</title>
+    <link href="https://cdn.jsdelivr.net/npm/nouislider@14.7.0/distribute/nouislider.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f3f4f6;
+            padding: 40px;
+            margin: 0;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: #555;
+            margin-top: 20px;
+        }
+
+        /* Layout principal */
+        #container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px; /* Ajustado o espaçamento entre as caixas */
+        }
+
+        /* Caixa de texto com botões */
+        .box {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 32%; /* Ajustado para 32% para permitir que fiquem lado a lado */
+            padding: 30px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .box h3 {
+            font-size: 1.3rem;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .box p {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Estilo da imagem */
+        #introImage {
+            max-width: 20%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+            margin-top: 40px;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            #container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .box {
+                width: 80%; /* As caixas ocuparão mais largura em telas menores */
+                margin-bottom: 20px;
+            }
+
+            #introImage {
+                max-width: 60%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Integral Definida como você nunca viu</h1>
+    <img id="introImage" src="figura_integral.png" alt="Integral Definida">
+    <!--<h2>Professor X, disciplina: Cálculo</h2>-->
+    <p>Em nesta sequência de atividades, você vai explorar conceitos importantes de Cálculo de uma maneira interativa e dinâmica. Prepare-se para se aprofundar nos conceitos de Integral Definida, Teorema Fundamental do Cálculo e mais!</p>
+    
+
+    <div id="container">
+        <!-- Caixa 1 -->
+        <div class="box">
+            <h3>Explorando Integral Definida como Soma</h3>
+            <p>Nesta atividade você vai explorar o conceito de Integral Definida como Soma de Riemann e suas aplicações.</p>
+            <button onclick="window.location.href='integral_definida.html'">Parte 1</button>
+        </div>
+
+        <!-- Caixa 2 -->
+        <div class="box">
+            <h3>Estudo da Prova do Teorema Fundamental do Cálculo</h3>
+            <p>Nesta atividade você vai estudar a prova do Teorema Fundamental do Cálculo e compreender seus fundamentos.</p>
+            <button onclick="window.location.href='index.html'">Parte 2</button>
+        </div>
+
+        <!-- Caixa 3 -->
+        <div class="box">
+            <h3>Verificando o Teorema Fundamental do Cálculo</h3>
+            <p>Nesta atividade você vai verificar como o Teorema Fundamental do Cálculo funciona por meio de exemplos interativos.</p>
+            <button onclick="window.location.href='teorema_fundamental.html'">Parte 3</button>
+        </div>
+    </div>
+
+</body>
+</html>

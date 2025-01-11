@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Educativo: Integral Definida</title>
+    <link href="https://cdn.jsdelivr.net/npm/nouislider@14.7.0/distribute/nouislider.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- CSS incorporado -->
+    <style>
+        /* Estilo global (copiado da Página 1) */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f8;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Roboto', sans-serif;
+            color: #007bff;
+            margin: 10px 0;
+        }
+        
+
+
+        /* Estilo para a estrutura principal */
+        .container {
+            display: flex;
+            justify-content: flex-start;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Painel lateral (copiado da Página 1) */
+        .sidebar {
+            width: 300px;
+            background-color: #ffffff;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .sidebar h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+
+        .sidebar label {
+            font-size: 16px;
+            margin-top: 10px;
+            color: #555;
+        }
+
+        .sidebar input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Área do gráfico (copiado da Página 1) */
+        .graph-area {
+            margin-left: 320px;
+            padding: 20px;
+            width: calc(100% - 320px);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .graph-area h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .graph-area h2 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        .graph-area h3 {
+            font-size: 18px;
+            color: #555;
+        }
+
+        /* Responsividade (copiado da Página 1) */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 250px;
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .graph-area {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .sidebar-toggle {
+                display: block;
+                background-color: #f4f4f4;
+                padding: 10px;
+                font-size: 18px;
+                position: absolute;
+                top: 20px;
+                left: 20px;
+                z-index: 999;
+                cursor: pointer;
+            }
+
+            .sidebar input {
+                font-size: 14px;
+            }
+
+            .graph-area h1 {
+                font-size: 24px;
+            }
+
+            .graph-area h2 {
+                font-size: 20px;
+            }
+        }
+        .plot-limits {
+            display: flex;
+            flex-direction: row; /* Espacamento entre os elementos */
+            white-space: nowrap;
+        }
+
+        .plot-limits label {
+            font-size: 14px; /* Ajusta o tamanho da fonte do rótulo */
+            margin-right: 5px; /* Adiciona um espaço entre o rótulo e o input */
+        }
+
+        .plot-limits input {
+            width: 60px; /* Ajusta a largura da caixa de entrada */
+            font-size: 14px; /* Tamanho da fonte do input */
+        }
+        /* Adiciona o espaço entre as caixas, mas não entre os rótulos */
+        .plot-limits input:nth-child(2) {
+            margin-right: 20px; /* Espaçamento entre as duas caixas de entrada */
+        }
+
+    </style>
+
+    <!-- Script externo MathJax -->
+    <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+</head>
+<body>
+    <div class="container">
+        <!-- Painel lateral com controles -->
+        <div class="sidebar">
+            <h2>Aproxime a Integral Definida utilizando retângulos</h2>
+            <h3> Exemplos de funções: x, x^2, e^x, sin(x), cos(x), 1/x</h3>
+            <label for="functionInput">Função f(x):</label>
+            <input type="text" id="functionInput" placeholder="x">
+            <h2 id="functionTitle">Função:</h2>
+            
+            <div class="plot-limits">
+                <label for="xMin"> x<sub>min</sub></label>
+                <input type="number" id="xMin" value="-5">
+                <label for="xMax">x<sub>max</sub></label>
+                <input type="number" id="xMax" value="5">
+            </div>
+            
+            <div class="controls">
+                <label for="lowerLimit">Limite Inferior (x<sub>1</sub>):</label>
+                <span id="lowerValue">-1</span>
+                <input type="range" id="lowerLimit" min="-10" max="10" step="0.1" value="-1">
+                
+                
+                <label for="upperLimit">Limite Superior (x<sub>2</sub>):</label>
+                <span id="upperValue">1</span>
+                <input type="range" id="upperLimit" min="-10" max="10" step="0.1" value="1">
+                
+            </div>
+            
+            <label for="numRectangles">Número de Retângulos:</label>
+            <input type="range" id="numRectangles" min="0" max="100" step="1" value="0">
+            <span id="numRectanglesValue">0</span>
+
+            <h3>Área sob o gráfico: <span id="areaValue">0</span></h3>
+            
+            <label for="maxRectangles">Máximo de Aproximações:</label>
+            <input type="number" id="maxRectangles" min="1" value="100">
+            
+            <button id="playButton">Play</button>
+        </div>
+
+        <!-- Área do gráfico -->
+        <div class="graph-area">
+            
+            <!--<h2 id="functionTitle">Função:</h2> -->
+            <div id="plot"></div>
+            <!-- <h3>Área sob o gráfico: <span id="areaValue">0</span></h3> -->
+        </div>
+    </div>
+
+    <!-- Scripts externos Plotly e Math.js -->
+    <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.3.0/math.min.js"></script>
+
+    <!-- JavaScript incorporado -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const functionInput = document.getElementById('functionInput');
+            const lowerLimit = document.getElementById('lowerLimit');
+            const upperLimit = document.getElementById('upperLimit');
+            const lowerValue = document.getElementById('lowerValue');
+            const upperValue = document.getElementById('upperValue');
+            const areaValue = document.getElementById('areaValue');
+            const xMinInput = document.getElementById('xMin');
+            const xMaxInput = document.getElementById('xMax');
+            const numRectanglesInput = document.getElementById('numRectangles');
+            const numRectanglesValue = document.getElementById('numRectanglesValue');
+            const playButton = document.getElementById('playButton');
+            const maxRectanglesInput = document.getElementById('maxRectangles');
+
+            let lower = parseFloat(lowerLimit.value);
+            let upper = parseFloat(upperLimit.value);
+            let xMin = parseFloat(xMinInput.value);
+            let xMax = parseFloat(xMaxInput.value);
+            let numRectangles = parseInt(numRectanglesInput.value);
+            let isPlaying = false;
+            let intervalId;
+
+            let yMin = -10;
+            let yMax = 10;
+
+            let currentZoomX = [xMin, xMax];
+            let currentZoomY = [yMin, yMax];
+
+            numRectanglesValue.textContent = numRectangles;
+            lowerValue.textContent = lower.toFixed(2);
+            upperValue.textContent = upper.toFixed(2);
+
+            // Função padrão para plotar ao carregar a página
+            const defaultFunction = "x"; // ou qualquer outra função padrão
+            plotGraph(defaultFunction);
+            
+            function plotGraph(funcExpr) {
+                if (!funcExpr) {
+                    // Se não houver função definida, use f(x) = 0 como valor padrão
+                    funcExpr = "0";
+                }
+
+                // Passo de cálculo da integral
+                const step = (upper - lower) / numRectangles;
+                const { xValues, yValues } = generateGraphData(funcExpr, xMin, xMax, 0.01);
+
+                const areaShapes = getHighlightedArea(funcExpr, lower, upper, step, numRectangles);
+
+                // Calcular as posições no gráfico para os limites
+                const lowerY = math.evaluate(funcExpr, { x: lower });
+                const upperY = math.evaluate(funcExpr, { x: upper });
+
+                // Ajustar os limites do gráfico se necessário (geralmente para f(x) = 0)
+                if (yMin === -10 && yMax === 10) {
+                    // Garantir que a área de plotagem seja bem visível
+                    yMin = Math.min(0, Math.min(lowerY, upperY), Math.min(...yValues));
+                    yMax = Math.max(0, Math.max(lowerY, upperY), Math.max(...yValues));
+                }
+
+                const verticalLines = [
+                    {
+                        type: 'line',
+                        x0: lower,
+                        x1: lower,
+                        y0: 0,
+                        y1: lowerY,
+                        line: { color: 'black', width: 2, dash: 'dash' }
+                    },
+                    {
+                        type: 'line',
+                        x0: upper,
+                        x1: upper,
+                        y0: 0,
+                        y1: upperY,
+                        line: { color: 'black', width: 2, dash: 'dash' }
+                    }
+                ];
+
+                const layout = {
+                    title: '',
+                    xaxis: {
+                        title: 'x',
+                        range: currentZoomX
+                    },
+                    yaxis: {
+                        title: 'f(x)',
+                        range: [yMin - 1, yMax + 1], // Definir uma margem para que o gráfico seja bem visível
+                        scaleanchor: "x"
+                    },
+                    shapes: areaShapes.concat(verticalLines)
+                };
+
+                layout.height = window.innerHeight - 100;
+
+                drawGraph(xValues, yValues, layout);
+
+                const area = calculateArea(funcExpr, lower, upper, numRectangles);
+                areaValue.textContent = area.toFixed(4);
+
+                updateFunctionTitle(funcExpr);
+            }
+
+
+   
+            function generateGraphData(funcExpr, xMin, xMax, step) {
+                const xValues = [];
+                const yValues = [];
+                for (let x = xMin; x <= xMax; x += step) {
+                    xValues.push(x);
+                    yValues.push(math.evaluate(funcExpr, { x }));
+                }
+                return { xValues, yValues };
+            }
+
+            function drawGraph(xValues, yValues, layout) {
+                const plotData = [{
+                    x: xValues,
+                    y: yValues,
+                    type: 'scatter',
+                    mode: 'lines',
+                    line: { color: 'blue' }
+                }];
+                Plotly.newPlot('plot', plotData, layout).then(function() {
+                    const zoomX = Plotly.d3.select('#plot').node().layout.xaxis.range;
+                    const zoomY = Plotly.d3.select('#plot').node().layout.yaxis.range;
+                    currentZoomX = zoomX || currentZoomX;
+                    currentZoomY = zoomY || currentZoomY;
+                });
+            }
+
+            function calculateArea(funcExpr, lower, upper, numRectangles) {
+                const step = (upper - lower) / numRectangles;  // Tamanho da base de cada retângulo
+                let totalArea = 0;
+
+                // Quando o número de retângulos for 1, calcula o retângulo com base no ponto médio
+                if (numRectangles === 1) {
+                    const xMid = (lower + upper) / 2;
+                    const yMid = math.evaluate(funcExpr, { x: xMid });
+                    totalArea = yMid * step;  // Calcula a área com 1 retângulo
+                } else {
+                    // Para múltiplos retângulos, soma ou subtrai as áreas de acordo com o sinal de f(x)
+                    for (let i = 0; i < numRectangles; i++) {
+                        const xStart = lower + i * step;
+                        const xEnd = lower + (i + 1) * step;
+
+                        // Calcule a altura do retângulo em ambos os extremos (começo e fim)
+                        const yStart = math.evaluate(funcExpr, { x: xStart });
+                        const yEnd = math.evaluate(funcExpr, { x: xEnd });
+
+                        // Aqui, desenha o retângulo levando em consideração a altura de f(x) nos dois extremos
+                        // Calcule a média da altura do retângulo
+                        const avgHeight = (yStart + yEnd) / 2;
+
+                        // Adicione ou subtraia a área com base no sinal da média
+                        totalArea += avgHeight * step;
+                    }
+                }
+
+                return totalArea;  // Retorna a área total
+            }
+
+            function getHighlightedArea(funcExpr, lower, upper, step, numRectangles) {
+            const shapes = [];
+            const lineWidth = Math.min(0.01, 0.01 / numRectangles);
+            for (let i = 0; i < numRectangles; i++) {
+                // Calcular o ponto médio
+                const xMid = lower + (i + 0.5) * step;
+                const yMid = math.evaluate(funcExpr, { x: xMid });
+
+                // Criar o retângulo usando o ponto médio para a altura
+                if (yMid > 0) {
+                    shapes.push({
+                        type: 'rect',
+                        x0: lower + i * step,
+                        x1: lower + (i + 1) * step,
+                        y0: 0,
+                        y1: yMid,
+                        fillcolor: 'rgba(18, 50, 209, 0.3)', // cor do retângulo
+                        line: { color: 'blue'}
+                    });
+                } else if (yMid < 0) {
+                    const x1 = (lower + i * step) < lower ? lower : (lower + i * step);
+                    shapes.push({
+                        type: 'rect',
+                        x0: lower + i * step,
+                        x1: lower + (i + 1) * step,
+                        y0: yMid,
+                        y1: 0,
+                        fillcolor: 'rgba(255, 0, 0, 0.3)', // cor do retângulo
+                        line: {color: 'red'}
+                    });
+                }
+            }
+            return shapes;
+        }
+
+            function updateFunctionTitle(funcExpr) {
+                const latexExpr = `f(x) = ${funcExpr}`;
+                const titleElement = document.getElementById('functionTitle');
+                titleElement.innerHTML = `Função: \\(${latexExpr}\\)`; // Atualiza o título com a expressão LaTeX
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub, titleElement]); // Garante que o MathJax renderize o LaTeX
+            }
+
+            function startAnimation() {
+                if (isPlaying) return;
+
+                isPlaying = true;
+                intervalId = setInterval(() => {
+                    if (numRectangles < parseInt(maxRectanglesInput.value)) {
+                        numRectangles++;
+                        numRectanglesValue.textContent = numRectangles;
+                        numRectanglesInput.value = numRectangles;
+
+                        const funcExpr = functionInput.value.trim();
+                        plotGraph(funcExpr);
+                    } else {
+                        clearInterval(intervalId);
+                        isPlaying = false;
+                    }
+                }, 200);
+            }
+
+            maxRectanglesInput.addEventListener('input', () => {
+                const maxIterations = parseInt(maxRectanglesInput.value);
+                numRectanglesInput.max = maxIterations;
+            });
+
+            playButton.addEventListener('click', () => {
+                startAnimation();
+            });
+
+            functionInput.addEventListener('input', () => {
+                const funcExpr = functionInput.value.trim();
+                plotGraph(funcExpr);
+            });
+
+            lowerLimit.addEventListener('input', () => {
+                lower = parseFloat(lowerLimit.value);
+                lowerValue.textContent = lower.toFixed(2);
+                const funcExpr = functionInput.value.trim();
+                plotGraph(funcExpr);
+            });
+
+            upperLimit.addEventListener('input', () => {
+                upper = parseFloat(upperLimit.value);
+                upperValue.textContent = upper.toFixed(2);
+                const funcExpr = functionInput.value.trim();
+                plotGraph(funcExpr);
+            });
+
+            xMinInput.addEventListener('input', () => {
+                xMin = parseFloat(xMinInput.value);
+                const funcExpr = functionInput.value.trim();
+                plotGraph(funcExpr);
+            });
+
+            xMaxInput.addEventListener('input', () => {
+                xMax = parseFloat(xMaxInput.value);
+                const funcExpr = functionInput.value.trim();
+                plotGraph(funcExpr);
+            });
+
+            numRectanglesInput.addEventListener('input', () => {
+                numRectangles = parseInt(numRectanglesInput.value);
+                numRectanglesValue.textContent = numRectangles;
+                const funcExpr = functionInput.value.trim();
+                plotGraph(funcExpr);
+            });
+        });
+    </script>
+</body>
+</html>

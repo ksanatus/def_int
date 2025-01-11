@@ -1,0 +1,293 @@
+<!-- Cabeçalhos e links já foram definidos no index.html -->
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/nouislider@14.7.0/distribute/nouislider.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.0.0/math.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link href="https://cdn.jsdelivr.net/npm/nouislider@14.7.0/distribute/nouislider.min.css" rel="stylesheet">
+
+<!-- Código do estilo -->
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f4f7fc;
+        display: flex;
+        justify-content: flex-start;  
+        padding: 40px;
+        margin: 0;
+        flex-wrap: nowrap;  
+    }
+
+    h2 {
+        font-size: 2.5rem;
+        color: #0056b3;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    #sidebar {
+        width: 350px;
+        padding: 25px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        margin-right: 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    button {
+        background-color: #007bff;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 18px;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    #main-content {
+        display: flex;
+        flex-direction: row;
+        flex-grow: 1;  
+    }
+
+    #graph {
+        margin-top: 30px;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    #integralValues {
+        font-size: 14px; /* Define um tamanho fixo para a fonte */
+        line-height: 1.5; /* Ajusta o espaçamento entre as linhas */
+        margin-top: 25px;
+        text-align: center;
+        background-color: #ffffff;
+        padding: 10px;
+        border-radius: 12px;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+        max-width: 320px; /* Limita a largura do painel */
+        height: auto; /* Ajusta a altura automaticamente */
+        max-height: 200px; /* Limita a altura do painel lateral */
+        overflow: hidden; /* Impede que o conteúdo ultrapasse o painel */
+        word-wrap: break-word; /* Quebra palavras longas para evitar ultrapassar a largura */
+        overflow-wrap: break-word;
+    }
+
+    .integral-info {
+        margin-bottom: 10px;
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    .blue {
+        color: #1e90ff;
+    }
+
+    .message {
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 20px;
+    }
+</style>
+
+<!-- Conteúdo -->
+<div id="sidebar">
+    <div>
+        <label for="functionInput">Digite a função f(x) (exemplo: x^2):</label>
+        <input type="text" id="functionInput" value="x^2">
+        <button onclick="updateFunction()">Atualizar Função</button>
+    </div>
+    <div id="sliders">
+        <div class="slider-container">
+            <label for="x1Slider">Limite inferior a:</label>
+            <span id="x1Value">1</span><br>
+            <div id="x1Slider"></div>
+        </div>
+        <div class="slider-container">
+            <label for="x2Slider">Limite superior x:</label>
+            <span id="x2Value">2</span><br>
+            <div id="x2Slider"></div>
+        </div>
+        <div class="slider-container">
+            <label for="hSlider">Valor de h:</label>
+            <span id="hValue">0.5</span><br>
+            <div id="hSlider"></div>
+        </div>
+    </div>
+    <div id="integralValues">
+        <div id="integralExpression"></div>
+        <div id="variationExpression"></div>
+    </div>
+</div>
+
+<div id="main-content">
+    <div id="graph"></div>
+</div>
+
+<script>
+    // Função para calcular a soma de Riemann (aproximação da integral)
+    function integralNumerica(func, x1, x2, n = 10000) {
+        let h = (x2 - x1) / n;
+        let sum = 0;
+        for (let i = 0; i < n; i++) {
+            sum += func(x1 + i * h) * h;
+        }
+        return sum;
+    }
+
+    let x1 = 1, x2 = 2, h = 0.5;
+    let funcString = "x^2"; 
+    let f = math.parse(funcString).compile(); 
+
+    // Atualizar a função a partir do input do usuário
+    function updateFunction() {
+        funcString = document.getElementById('functionInput').value;
+        try {
+            f = math.parse(funcString).compile(); 
+            updateGraphs();
+        } catch (e) {
+            alert('Função inválida');
+        }
+    }
+
+    // Função para converter a função do math.js para um formato utilizável no gráfico
+    function evaluateFunction(x) {
+        return f.evaluate({ x: x });
+    }
+
+    // Atualizar gráficos e cálculos
+    function updateGraphs() {
+        let xValues = [];
+        for (let x = 0; x <= 10; x += 0.1) {
+            xValues.push(x);
+        }
+
+        let fValues = xValues.map(evaluateFunction);
+
+        // Cálculo das integrais
+        let integralX = integralNumerica(evaluateFunction, x1, x2);
+        let integralXPlusH = integralNumerica(evaluateFunction, x1, x2 + h);
+        let variation = integralXPlusH - integralX;
+
+        let trace1 = {
+            x: xValues,
+            y: fValues,
+            type: 'scatter',
+            mode: 'lines',
+            name: 'f(x)',
+            line: { color: "#007bff" }
+        };
+
+        let layout1 = {
+            xaxis: { title: 'x' },
+            yaxis: { title: 'y' },
+            shapes: [],
+            width: 1000, 
+            height: 600
+        };
+
+        // Adiciona a área de F(x) em azul
+        let numSteps = 1000;
+        let stepSize = (x2 - x1) / numSteps;
+        for (let i = 0; i < numSteps; i++) {
+            let xi = x1 + i * stepSize;
+            let xf = xi + stepSize;
+            let yi = evaluateFunction(xi);
+            let yf = evaluateFunction(xf);
+
+            let fillColor = 'rgba(0, 0, 255, 0.3)'; // Azul claro para F(x)
+
+            layout1.shapes.push({
+                type: 'rect',
+                x0: xi,
+                x1: xf,
+                y0: 0,
+                y1: Math.max(yi, yf),
+                fillcolor: fillColor,
+                line: { width: 0 }
+            });
+        }
+
+        // Adiciona a área de F(x+h) em azul claro
+        let stepSizePlusH = (x2 + h - x1) / numSteps;
+        for (let i = 0; i < numSteps; i++) {
+            let xi = x1 + i * stepSizePlusH;
+            let xf = xi + stepSizePlusH;
+            let yi = evaluateFunction(xi);
+            let yf = evaluateFunction(xf);
+
+            let fillColor = 'rgba(255, 0, 0, 0.5)'; // Azul mais claro para F(x+h)
+
+            layout1.shapes.push({
+                type: 'rect',
+                x0: xi,
+                x1: xf,
+                y0: 0,
+                y1: Math.max(yi, yf),
+                fillcolor: fillColor,
+                line: { width: 0 }
+            });
+        }
+
+        // Atualizar o gráfico com as áreas
+        Plotly.react('graph', [trace1], layout1);
+
+        // Atualizar o painel lateral com as expressões
+        document.getElementById('integralExpression').innerHTML = `$$F(x) = \\int_{${x1.toFixed(2)}}^{${x2.toFixed(2)}} f(x) \\, dx = ${integralX.toFixed(2)}$$`;
+        document.getElementById('variationExpression').innerHTML = `$$F(x+h) = \\int_{${x1.toFixed(2)}}^{${(x2 + h).toFixed(2)}} f(x) \\, dx = ${integralXPlusH.toFixed(2)}$$`;
+        document.getElementById('variationExpression').innerHTML += `<br> $$F(x+h) - F(x) = \\int_{${x2.toFixed(2)}}^{${(x2 + h).toFixed(2)}} f(x) \\, dx = ${variation.toFixed(2)}$$`;
+
+        // Forçar renderização do MathJax para as novas expressões
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.body]);  
+    }
+
+    window.onload = function() {
+        let x1Slider = document.getElementById('x1Slider');
+        let x1ValueDisplay = document.getElementById('x1Value');
+        noUiSlider.create(x1Slider, {
+            start: x1,
+            range: { 'min': 0, 'max': 10 },
+            step: 0.1
+        });
+        x1Slider.noUiSlider.on('update', function(values) {
+            x1 = parseFloat(values[0]);
+            x1ValueDisplay.innerHTML = x1.toFixed(2);
+            updateGraphs();
+        });
+
+        let x2Slider = document.getElementById('x2Slider');
+        let x2ValueDisplay = document.getElementById('x2Value');
+        noUiSlider.create(x2Slider, {
+            start: x2,
+            range: { 'min': 0, 'max': 10 },
+            step: 0.1
+        });
+        x2Slider.noUiSlider.on('update', function(values) {
+            x2 = parseFloat(values[0]);
+            x2ValueDisplay.innerHTML = x2.toFixed(2);
+            updateGraphs();
+        });
+
+        let hSlider = document.getElementById('hSlider');
+        let hValueDisplay = document.getElementById('hValue');
+        noUiSlider.create(hSlider, {
+            start: h,
+            range: { 'min': 0, 'max': 10 },
+            step: 0.1
+        });
+        hSlider.noUiSlider.on('update', function(values) {
+            h = parseFloat(values[0]);
+            hValueDisplay.innerHTML = h.toFixed(2);
+            updateGraphs();
+        });
+
+        updateGraphs(); // Inicializa com o gráfico e cálculos atualizados
+    };
+</script>

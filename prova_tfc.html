@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teorema Fundamental do Cálculo - Interativo</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nouislider@14.7.0/distribute/nouislider.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.0.0/math.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/nouislider@14.7.0/distribute/nouislider.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+            margin: 0;
+            flex-wrap: wrap; /* Permite que os itens se ajustem em telas menores */
+        }
+    
+        h2 {
+            font-size: 2.5rem;
+            color: #007bff;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+    
+        #sidebar {
+            width: 350px;
+            padding: 25px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-right: 30px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;  /* Faz com que o painel ocupe 1 parte do espaço disponível */
+        }
+    
+        #main-content {
+            display: flex;
+            flex-direction: column;
+            flex: 2;  /* Faz com que o gráfico ocupe 2 partes do espaço disponível */
+            max-width: 70%; /* Limita a largura máxima do gráfico */
+        }
+    
+        #graph {
+            width: 100%;
+            height: 600px;
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+            margin-top: 100px; /* Alinha o gráfico um pouco mais abaixo */
+        }
+
+        #congratulationsMessage {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+            color: green; /* Deixe a mensagem em verde */
+        }
+    
+        #sliders {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    
+        .slider-container {
+            margin: 15px 0;
+            font-size: 18px;
+            color: #555;
+        }
+    
+        input[type="text"] {
+            width: 250px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+    
+        input[type="text"]:focus {
+            border-color: #007bff;
+        }
+    
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+    
+        button:hover {
+            background-color: #0056b3;
+        }
+    
+        #integralValues {
+            font-size: 18px;
+            margin-top: 25px;
+            text-align: center;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+        }
+    
+        .integral-info {
+            margin-bottom: 10px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+    
+        .orange {
+            color: #ffa500;
+        }
+    
+        .blue {
+            color: #1e90ff;
+        }
+    
+        .red {
+            color: #a72839;
+        }
+    
+        .green {
+            color: #28a745; /* Adiciona um tom de verde para a área de L quando correta */
+        }
+    
+        .message {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    
+        @media (max-width: 900px) {
+            body {
+                padding: 20px;
+            }
+    
+            #sidebar {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+    
+            #main-content {
+                max-width: 100%;
+            }
+    
+            #graph {
+                height: 300px; /* Reduz a altura do gráfico para telas pequenas */
+            }
+        }
+    </style>
+    
+    <div id="sidebar">
+        <h2>Teorema Fundamental do Cálculo Interativo</h2>
+    
+        <!-- Entrada para a função -->
+        <div>
+            <label for="functionInput">Digite a função f(x) (exemplo: x^2):</label>
+            <input type="text" id="functionInput" value="x^2">
+            <button onclick="updateFunction()">Atualizar Função</button>
+        </div>
+    
+        <!-- Sliders -->
+        <div id="sliders">
+            <div class="slider-container">
+                <label for="x1Slider">Limite inferior x1:</label>
+                <span id="x1Value">1</span><br>
+                <div id="x1Slider"></div>
+            </div>
+            <div class="slider-container">
+                <label for="x2Slider">Limite superior x2:</label>
+                <span id="x2Value">4</span><br>
+                <div id="x2Slider"></div>
+            </div>
+            <div class="slider-container">
+                <label for="LSlider">Valor de L:</label>
+                <span id="LValue">2</span><br>
+                <div id="LSlider"></div>
+            </div>
+            <button id="playButton" onclick="playL()">Play</button>
+        </div>
+    
+        <!-- Áreas e Resultado -->
+        <div id="integralValues">
+            <p class="integral-info" id="integralValueText">Valor da integral:</p>
+            <p class="integral-info red" id="areaM_minus">Área do retângulo m:</p>
+            <p class="integral-info blue" id="areaL">Área do retângulo L:</p>
+            <p class="integral-info orange" id="areaM">Área do retângulo M:</p>
+        </div>
+    </div>
+    
+    <div id="main-content">
+        <div id="graph"></div>
+        <!-- Agora a mensagem de congratulações foi movida para dentro de main-content -->
+        <div id="congratulationsMessageContainer">
+            <p id="congratulationsMessage" class="message"></p>
+        </div>
+    </div>
+
+
+<script>
+    // Função para calcular a integral numérica pelo método de trapézios
+    function integralNumerica(func, x1, x2, n = 1000) {
+        let h = (x2 - x1) / n;
+        let sum = 0.5 * (func(x1) + func(x2));
+        for (let i = 1; i < n; i++) {
+            sum += func(x1 + i * h);
+        }
+        return sum * h;
+    }
+
+    let x1 = 1, x2 = 4;
+    let funcString = "x^2"; // Função padrão
+    let f = math.parse(funcString).compile(); // Compilar a função de entrada
+
+    // Atualizar a função a partir do input do usuário
+    function updateFunction() {
+        funcString = document.getElementById('functionInput').value;
+        try {
+            f = math.parse(funcString).compile(); // Recompila a função usando math.js
+            updateGraphs();
+        } catch (e) {
+            alert('Função inválida');
+        }
+    }
+
+    // Função para converter a função do math.js para um formato utilizável no gráfico
+    function evaluateFunction(x) {
+        return f.evaluate({ x: x });
+    }
+
+    // Atualizar gráficos
+    function updateGraphs() {
+        let xValues = [];
+        for (let x = 0; x <= 10; x += 0.1) {
+            xValues.push(x);
+        }
+
+        let fValues = xValues.map(evaluateFunction);
+
+        // Definir o valor de M, m e L
+        let M = evaluateFunction(x2);
+        let m = evaluateFunction(x1);
+        let L = parseFloat(document.getElementById('LValue').innerHTML);
+
+        // Calcular o valor da integral (chamar o método de trapézios)
+        let integralValue = integralNumerica(evaluateFunction, x1, x2);  // Corrigir cálculo da integral
+
+        // Gráfico
+        let trace1 = {
+            x: xValues,
+            y: fValues,
+            type: 'scatter',
+            mode: 'lines',
+            name: 'f(x)',
+            line: { color: "#007bff" }
+        };
+
+        let layout = {
+            title: 'Função f(x) e Áreas Correspondentes',
+            xaxis: { title: 'x' },
+            yaxis: { title: 'y' },
+            shapes: [
+                // Retângulo M (superior)
+                {
+                    type: 'rect',
+                    x0: x1,
+                    x1: x2,
+                    y0: 0,
+                    y1: M,
+                    line: { color: 'orange', width: 3 }
+                },
+                // Retângulo m (inferior)
+                {
+                    type: 'rect',
+                    x0: x1,
+                    x1: x2,
+                    y0: 0,
+                    y1: m,
+                    line: { color: 'red', width: 3 }
+                },
+                // Retângulo L (variável)
+                {
+                    type: 'rect',
+                    x0: x1,
+                    x1: x2,
+                    y0: 0,
+                    y1: L,
+                    line: { color: 'blue', width: 3 }
+                }
+            ]
+        };
+
+        Plotly.react('graph', [trace1], layout);
+
+        // Atualizar os valores das áreas
+        let areaM = (x2 - x1) * M;
+        let areaL = (x2 - x1) * L;
+        let areaM_minus = (x2 - x1) * m;
+
+        // Atualizando o valor da integral corretamente
+        document.getElementById('integralValueText').innerHTML = `Valor da integral: ${(integralValue).toFixed(2)}`;  // Corrigir exibição da integral
+        document.getElementById('areaM').innerHTML = `Área do retângulo M: ${(areaM).toFixed(2)}`;
+        document.getElementById('areaL').innerHTML = `Área do retângulo L: ${(areaL).toFixed(2)}`;
+        document.getElementById('areaM_minus').innerHTML = `Área do retângulo m: ${(areaM_minus).toFixed(2)}`;
+
+        if (Math.abs(areaL - integralValue) < 0.01) {
+            document.getElementById('congratulationsMessage').innerHTML = "Parabéns! Você encontrou o valor da integral.";
+            document.getElementById('areaL').classList.add("green");  // Adicionar a classe verde
+        } else {
+            document.getElementById('congratulationsMessage').innerHTML = "";
+            document.getElementById('areaL').classList.remove("green");  // Remover a classe verde
+        }
+    }
+
+    // Inicializar sliders
+    window.onload = function() {
+        let x1Slider = document.getElementById('x1Slider');
+        let x1ValueDisplay = document.getElementById('x1Value');
+        noUiSlider.create(x1Slider, {
+            start: x1,
+            range: { 'min': 0, 'max': 10 },
+            step: 0.1
+        });
+        x1Slider.noUiSlider.on('update', function(values) {
+            x1 = parseFloat(values[0]);
+            x1ValueDisplay.innerHTML = x1.toFixed(2);
+            updateGraphs();
+        });
+
+        let x2Slider = document.getElementById('x2Slider');
+        let x2ValueDisplay = document.getElementById('x2Value');
+        noUiSlider.create(x2Slider, {
+            start: x2,
+            range: { 'min': 0, 'max': 10 },
+            step: 0.1
+        });
+        x2Slider.noUiSlider.on('update', function(values) {
+            x2 = parseFloat(values[0]);
+            x2ValueDisplay.innerHTML = x2.toFixed(2);
+            updateGraphs();
+        });
+
+        // Slider para L: Agora permite valores livres, sem restrições
+        let LSlider = document.getElementById('LSlider');
+        let LValueDisplay = document.getElementById('LValue');
+        noUiSlider.create(LSlider, {
+            start: 2,
+            range: { 'min': -100, 'max': 100 },  // Intervalo expandido, permite valores negativos ou grandes
+            step: 0.1
+        });
+        LSlider.noUiSlider.on('update', function(values) {
+            let L = parseFloat(values[0]);
+            LValueDisplay.innerHTML = L.toFixed(2);
+            updateGraphs();
+        });
+
+        updateGraphs();
+    };
+
+    // Função para animar o valor de L
+    let isPlaying = false;
+    let intervalId;
+
+    function playL() {
+        if (isPlaying) {
+            // Se já estiver rodando, paramos a animação
+            clearInterval(intervalId);
+            isPlaying = false;
+            document.getElementById('playButton').innerHTML = "Play";
+        } else {
+            // Se não estiver rodando, começamos a animação
+            isPlaying = true;
+            document.getElementById('playButton').innerHTML = "Pause";
+
+            intervalId = setInterval(function() {
+                let currentL = parseFloat(document.getElementById('LValue').innerHTML);
+
+                // Calcular a área da integral
+                let integralArea = integralNumerica(evaluateFunction, x1, x2);
+
+                // Verificar se a área do retângulo L está muito próxima da área da integral
+                if (Math.abs((x2 - x1) * currentL - integralArea) < 0.01) {
+                    // Se estiver próximo o suficiente, parar a animação
+                    clearInterval(intervalId);
+                    document.getElementById('playButton').innerHTML = "Play";
+                    isPlaying = false;
+                } else {
+                    // Caso contrário, aumentamos ou diminuímos o valor de L
+                    let newL = currentL + (integralArea > (x2 - x1) * currentL ? 0.1 : -0.1);
+                    document.getElementById('LValue').innerHTML = newL.toFixed(2);
+
+                    // Atualizar o gráfico
+                    updateGraphs();
+                }
+            }, 100); // Atualiza a cada 100ms (ajuste conforme necessário)
+        }
+    }
+</script>
+
+</body>
+</html>

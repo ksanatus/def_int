@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teorema Fundamental do Cálculo - Interativo</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nouislider@14.7.0/distribute/nouislider.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.0.0/math.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/nouislider@14.7.0/distribute/nouislider.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+            margin: 0;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            color: #007bff;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* Layout do painel lateral */
+        #sidebar {
+            width: 350px;
+            padding: 25px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-right: 30px;
+            display: flex;
+            flex-direction: column;
+            max-height: 750px;
+            overflow-y: auto;
+        }
+
+        /* Gráficos */
+        #graph1, #graph2 {
+            width: 100%;
+            height: 400px;
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+
+        #sliders {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .slider-container {
+            margin: 15px 0;
+            font-size: 18px;
+            color: #555;
+        }
+
+        #valueDisplay {
+            font-size: 18px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .input-section {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        input[type="text"] {
+            width: 250px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #007bff;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #integralValues {
+            font-size: 18px;
+            margin-top: 25px;
+            text-align: center;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+            width: 100%;
+        }
+
+        .integral-info {
+            margin-bottom: 10px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .orange {
+            color: #ffa500;
+        }
+
+        .blue {
+            color: #1e90ff;
+        }
+
+        /* Customização dos sliders */
+        .noUi-origin {
+            background: #007bff !important;
+        }
+
+        .noUi-connect {
+            background: #4c8bf5 !important;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- Painel Lateral -->
+<div id="sidebar">
+    <h2>Teorema Fundamental do Cálculo Interativo</h2>
+
+    <!-- Entrada para a função -->
+    <div class="input-section">
+        <label for="functionInput">Digite a função f(x) (exemplo: x^2):</label>
+        <input type="text" id="functionInput" value="x^2">
+        <button onclick="updateFunction()">Atualizar Função</button>
+    </div>
+
+    <!-- Sliders -->
+    <div id="sliders">
+        <div class="slider-container">
+            <label for="x1Slider">Limite inferior x1: </label><span id="x1Value">1</span><br>
+            <div id="x1Slider"></div>
+        </div>
+        <div class="slider-container">
+            <label for="x2Slider">Limite superior x2: </label><span id="x2Value">4</span><br>
+            <div id="x2Slider"></div>
+        </div>
+    </div>
+
+    <!-- Exibição dos valores da integral e F(x1), F(x2) -->
+    <div id="integralValues">
+        <p class="integral-info orange" id="x1ValueText"></p>
+        <p class="integral-info blue" id="x2ValueText"></p>
+        <p class="integral-info orange" id="F_x1Text"></p>
+        <p class="integral-info blue" id="F_x2Text"></p>
+        <p class="integral-info" id="integralDifference"></p>
+        <p class="integral-info" id="numericalIntegralValue"></p>
+    </div>
+</div>
+
+<!-- Gráficos -->
+<div>
+    <div id="graph1"></div>
+    <div id="graph2"></div>
+</div>
+
+<script>
+    // Função que calcula a integral numérica pelo método de trapézios
+    function integralNumerica(func, x1, x2, n = 1000) {
+        let h = (x2 - x1) / n;
+        let sum = 0.5 * (func(x1) + func(x2));
+        for (let i = 1; i < n; i++) {
+            sum += func(x1 + i * h);
+        }
+        return sum * h;
+    }
+
+    let x1 = 1, x2 = 4;
+    let funcString = "x^2"; // Função padrão
+    let f = math.parse(funcString).compile(); // Compilar a função de entrada
+
+    // Atualizar a função a partir do input do usuário
+    function updateFunction() {
+        funcString = document.getElementById('functionInput').value;
+        try {
+            f = math.parse(funcString).compile(); // Recompila a função usando math.js
+            updateGraphs();
+        } catch (e) {
+            alert('Função inválida');
+        }
+    }
+
+    // Função para converter a função do math.js para um formato utilizável no gráfico
+    function evaluateFunction(x) {
+        return f.evaluate({ x: x });
+    }
+
+    // Função para calcular a primitiva de f(x)
+    function calcularPrimitiva(x) {
+        return integralNumerica(evaluateFunction, 0, x);
+    }
+
+    // Atualizar gráficos
+    function updateGraphs() {
+        let xValues = [];
+        for (let x = 0; x <= 10; x += 0.1) {
+            xValues.push(x);
+        }
+
+        let fValues = xValues.map(evaluateFunction);
+        let FValues = xValues.map(calcularPrimitiva);
+
+        // Atualizar gráfico 1 (f(x) e área)
+        let trace1 = {
+            x: xValues,
+            y: fValues,
+            type: 'scatter',
+            mode: 'lines',
+            name: 'f(x)',
+            line: { color: "#007bff" }
+        };
+
+        let layout1 = {
+            title: 'Função f(x) e Área Correspondente a Integral de f(x)',
+            xaxis: { title: 'x' },
+            yaxis: { title: 'y' },
+            shapes: []
+        };
+
+        // Adiciona os retângulos para destacar a área sob a curva entre x1 e x2
+        let numSteps = 100;
+        let stepSize = (x2 - x1) / numSteps;
+        for (let i = 0; i < numSteps; i++) {
+            let xi = x1 + i * stepSize;
+            let xf = xi + stepSize;
+            let yi = evaluateFunction(xi);
+            let yf = evaluateFunction(xf);
+
+            let fillColor = (yi >= 0 || yf >= 0) ? 'rgba(0, 255, 0, 0.3)' : 'rgba(255, 0, 0, 0.3)';
+
+            layout1.shapes.push({
+                type: 'rect',
+                x0: xi,
+                x1: xf,
+                y0: 0,
+                y1: Math.max(yi, yf),
+                fillcolor: fillColor,
+                line: {
+                    width: 0
+                }
+            });
+        }
+
+        Plotly.react('graph1', [trace1], layout1);
+
+        // Atualizar gráfico 2 (F(x))
+        let trace2 = {
+            x: xValues,
+            y: FValues,
+            type: 'scatter',
+            mode: 'lines',
+            name: 'F(x)',
+            line: { color: "#1e90ff" }
+        };
+
+        // Adiciona linhas pontilhadas para x1 e x2
+        let layout2 = {
+            title: 'Função Primitiva F(x)',
+            xaxis: { title: 'x' },
+            yaxis: { title: 'F(x)' },
+            shapes: [
+                {
+                    type: 'line',
+                    x0: x1,
+                    x1: x1,
+                    y0: 0,
+                    y1: calcularPrimitiva(x1),
+                    line: {
+                        dash: 'dot',
+                        width: 2,
+                        color: 'orange'
+                    }
+                },
+                {
+                    type: 'line',
+                    x0: 0,
+                    x1: x1,
+                    y0: calcularPrimitiva(x1),
+                    y1: calcularPrimitiva(x1),
+                    line: {
+                        dash: 'dot',
+                        width: 2,
+                        color: 'orange'
+                    }
+                },
+                {
+                    type: 'line',
+                    x0: x2,
+                    x1: x2,
+                    y0: 0,
+                    y1: calcularPrimitiva(x2),
+                    line: {
+                        dash: 'dot',
+                        width: 2,
+                        color: 'blue'
+                    }
+                },
+                {
+                    type: 'line',
+                    x0: 0,
+                    x1: x2,
+                    y0: calcularPrimitiva(x2),
+                    y1: calcularPrimitiva(x2),
+                    line: {
+                        dash: 'dot',
+                        width: 2,
+                        color: 'blue'
+                    }
+                }
+            ]
+        };
+
+        let integralValue = integralNumerica(evaluateFunction, x1, x2);
+        document.getElementById('integralDifference').innerHTML = `F(x2) - F(x1) = ${(calcularPrimitiva(x2) - calcularPrimitiva(x1)).toFixed(2)}`;
+        document.getElementById('numericalIntegralValue').innerHTML = `Integral numérica: ${integralValue.toFixed(2)}`;
+
+        Plotly.react('graph2', [trace2], layout2);
+
+        // Atualizando os valores dos limites e da primitiva
+        document.getElementById('x1ValueText').innerHTML = `x1 = ${x1.toFixed(2)}`;
+        document.getElementById('x2ValueText').innerHTML = `x2 = ${x2.toFixed(2)}`;
+        document.getElementById('F_x1Text').innerHTML = `F(x1) = ${calcularPrimitiva(x1).toFixed(2)}`;
+        document.getElementById('F_x2Text').innerHTML = `F(x2) = ${calcularPrimitiva(x2).toFixed(2)}`;
+    }
+
+    // Inicializar sliders
+    window.onload = function() {
+        let x1Slider = document.getElementById('x1Slider');
+        let x1ValueDisplay = document.getElementById('x1Value');
+        noUiSlider.create(x1Slider, {
+            start: x1,
+            range: { 'min': 0, 'max': 10 },
+            step: 0.1
+        });
+        x1Slider.noUiSlider.on('update', function(values) {
+            x1 = parseFloat(values[0]);
+            x1ValueDisplay.innerHTML = x1.toFixed(2);
+            updateGraphs();
+        });
+
+        let x2Slider = document.getElementById('x2Slider');
+        let x2ValueDisplay = document.getElementById('x2Value');
+        noUiSlider.create(x2Slider, {
+            start: x2,
+            range: { 'min': 0, 'max': 10 },
+            step: 0.1
+        });
+        x2Slider.noUiSlider.on('update', function(values) {
+            x2 = parseFloat(values[0]);
+            x2ValueDisplay.innerHTML = x2.toFixed(2);
+            updateGraphs();
+        });
+
+        updateGraphs();
+    };
+</script>
+
+</body>
+</html>

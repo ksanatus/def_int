@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividades Interativas</title>
+    
+    <style>
+        /* Estilo básico das abas */
+        .tabs {
+            display: flex;
+            cursor: pointer;
+        }
+
+        .tab {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            margin-right: 5px;
+            border-radius: 5px;
+        }
+
+        .tab:hover {
+            background-color: #0056b3;
+        }
+
+        /* Contêiner para o conteúdo das atividades */
+        .activity-content {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Teorema Fundamental do Cálculo</h1>
+
+    <!-- Abas de navegação -->
+    <div class="tabs">
+        <div class="tab" onclick="showActivity('activity1')">Atividade 1</div>
+        <div class="tab" onclick="showActivity('activity2')">Atividade 2</div>
+        <div class="tab" onclick="showActivity('activity3')">Atividade 3</div>
+    </div>
+
+    <!-- Conteúdo das atividades -->
+    <div id="activity1" class="activity-content active">
+        <!-- Aqui você vai incluir o conteúdo da Atividade 1 -->
+        <h2>Atividade 1: verificar que a integral definida é limitada </h2>
+        <iframe src="atividade1.html" width="100%" height="800px"></iframe>
+    </div>
+
+    <div id="activity2" class="activity-content">
+        <!-- Aqui você incluirá a Atividade 2 quando ela estiver pronta -->
+        <h2>Atividade 2</h2>
+        <p>Aqui ficará o conteúdo da Atividade 2.</p>
+        <iframe src="atividade2.html" width="100%" height="800px"></iframe>
+    </div>
+
+    <div id="activity3" class="activity-content">
+        <!-- Aqui você incluirá a Atividade 3 quando ela estiver pronta -->
+        <h2>Atividade 3</h2>
+        <p>Aqui ficará o conteúdo da Atividade 3.</p>
+        <iframe src="atividade3.html" width="100%" height="800px"></iframe>
+    </div>
+
+    <script>
+        function showActivity(activityId) {
+            // Ocultar todas as atividades
+            const activities = document.querySelectorAll('.activity-content');
+            activities.forEach(activity => activity.classList.remove('active'));
+
+            // Mostrar a atividade selecionada
+            document.getElementById(activityId).classList.add('active');
+        }
+    </script>
+
+</body>
+</html>
