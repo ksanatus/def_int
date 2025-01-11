@@ -168,6 +168,35 @@
         .plot-limits input:nth-child(2) {
             margin-right: 20px; /* Espaçamento entre as duas caixas de entrada */
         }
+        /* Navegação fixa no rodapé */
+        .footer {
+            position: fixed;
+            bottom: 0;  /* Posiciona os botões no fundo da tela */
+            left: 0;
+            width: 100%;  /* Garante que os botões ocupem toda a largura da tela */
+            background-color: #fff;
+            padding: 10px 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;  /* Coloca os botões acima de outros elementos */
+        }
+
+        .footer button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        .footer button:hover {
+            background-color: #0056b3;
+        }
 
     </style>
 
@@ -224,6 +253,11 @@
             <div id="plot"></div>
             <!-- <h3>Área sob o gráfico: <span id="areaValue">0</span></h3> -->
         </div>
+    </div>
+        <div class="footer">
+        <button onclick="window.location.href='index.html'">Voltar à Página Principal</button>
+        <button onclick="window.location.href='prova.html'">Ir para a Parte 2</button>
+        <button onclick="window.location.href='teorema_fundamental.html'">Ir para a Parte 3</button>
     </div>
 
     <!-- Scripts externos Plotly e Math.js -->
