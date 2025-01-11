@@ -15,8 +15,8 @@
             font-family: 'Roboto', sans-serif;
             background-color: #f3f4f6;
             display: flex;
-            justify-content: center;
-            padding: 40px;
+            justify-content: left;
+ 
             margin: 0;
         }
 
@@ -25,6 +25,27 @@
             color: #007bff;
             margin-bottom: 30px;
             text-align: center;
+        }
+        h4 {
+            font-size: 1.5rem;
+            color: #000000;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+
+
+        .description {
+            background-color: #ffffff;
+            padding: 10px;
+            position:absolute;
+            margin-top:0;
+            z-index: 1; /* Certifica-se de que a descrição ficará acima do painel lateral */
+            width: 100%;
+            height: 18%;
+            max-width: 100%; 
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            word-wrap: break-word;
         }
 
         /* Layout do painel lateral */
@@ -36,10 +57,15 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             margin-right: 30px;
             display: flex;
+            margin-top: 150px; /* Começa após a descrição */
+            left: 0;
+            bottom: 0;
             flex-direction: column;
             max-height: 750px;
             overflow-y: auto;
         }
+
+ 
 
         /* Gráficos */
         #graph1, #graph2 {
@@ -48,6 +74,11 @@
             border-radius: 12px;
             box-shadow: 0 6px 16px rgba(0,0,0,0.1);
             margin-bottom: 25px;
+            margin-top: 150px;
+        }
+
+        #graph2 {
+            margin-top: auto;            
         }
 
         #sliders {
@@ -136,43 +167,48 @@
         .noUi-connect {
             background: #4c8bf5 !important;
         }
-        /* Navegação fixa no rodapé */
-        .footer {
-            position: fixed;
-            bottom: 0;  /* Posiciona os botões no fundo da tela */
-            left: 0;
-            width: 100%;  /* Garante que os botões ocupem toda a largura da tela */
-            background-color: #fff;
-            padding: 10px 0;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.2);
-            z-index: 1000;  /* Coloca os botões acima de outros elementos */
-        }
+        /* Navegação fixada na parte inferior */
+.navigation {
+    position: fixed;      /* Torna a navegação fixa na tela */
+    bottom: 20px;         /* Fica 20px da parte inferior da tela */
+    left: 50%;            /* Centraliza os botões horizontalmente */
+    transform: translateX(-50%); /* Ajusta o posicionamento exato para centralizar */
+    text-align: center;   /* Centraliza os botões dentro do contêiner */
+    z-index: 1000;        /* Garante que a navegação fique acima de outros elementos */
+    display: flex;        /* Flexbox para distribuir os botões */
+    gap: 20px;            /* Espaçamento entre os botões */
+}
 
-        .footer button {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 18px;
-            transition: background-color 0.3s ease;
-        }
+.navigation button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+}
 
-        .footer button:hover {
-            background-color: #0056b3;
-        }
+.navigation button:hover {
+    background-color: #0056b3;
+}
 
     </style>
+        <!-- Script externo MathJax -->
+        <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </head>
 <body>
-
+    <div class="description">
+        <h4>O cálculo da Integral Definida \( \int_{a}^{b} f(x) \, dx \) a partir do Teorema Fundamental do Cálculo</h4>
+    </h4>Dada uma função \( f(x) \) definida em \( [a, b] \), e \( F'(x) = f(x)  \) então 
+     \( \int_{a}^{b} f(x) \, dx  = F(b) - F(a) \)
+</h4>
+    </div>
 <!-- Painel Lateral -->
 <div id="sidebar">
-    <h2>Teorema Fundamental do Cálculo Interativo</h2>
+    <h4>Calculando a Integral Definida</h4>
 
     <!-- Entrada para a função -->
     <div class="input-section">
@@ -203,16 +239,17 @@
         <p class="integral-info" id="numericalIntegralValue"></p>
     </div>
 </div>
-        <div class="footer">
-        <button onclick="window.location.href='index.html'">Voltar à Página Principal</button>
-        <button onclick="window.location.href='integral_definida.html'">Voltar à Parte 1</button>
-        <button onclick="window.location.href='teorema_fundamental.html'">Voltar á Parte 2</button>
-    </div>
 
 <!-- Gráficos -->
 <div>
     <div id="graph1"></div>
     <div id="graph2"></div>
+</div>
+</div>
+<div class="navigation" style="margin-top: 20px;">
+    <button onclick="window.location.href='index.html'">Voltar à Página Principal</button>
+    <button onclick="window.location.href='integral_definida.html'">Voltar para a Parte 1</button>
+    <button onclick="window.location.href='prova.html'">Ir para a Parte 2</button>
 </div>
 
 <script>
