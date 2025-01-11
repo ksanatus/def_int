@@ -147,12 +147,12 @@
     </div>
     <div id="sliders">
         <div class="slider-container">
-            <label for="x1Slider">Limite inferior x1:</label>
+            <label for="x1Slider">Limite inferior a:</label>
             <span id="x1Value">1</span><br>
             <div id="x1Slider"></div>
         </div>
         <div class="slider-container">
-            <label for="x2Slider">Limite superior x2:</label>
+            <label for="x2Slider">Limite superior b:</label>
             <span id="x2Value">4</span><br>
             <div id="x2Slider"></div>
         </div>
@@ -165,9 +165,9 @@
     </div>
     <div id="integralValues">
         <p class="integral-info" id="integralValueText">Valor da integral:</p>
-        <p class="integral-info red" id="areaM_minus">Área do retângulo m:</p>
-        <p class="integral-info blue" id="areaL">Área do retângulo L:</p>
-        <p class="integral-info orange" id="areaM">Área do retângulo M:</p>
+        <p class="integral-info red" id="areaM_minus">Área do retângulo m*h:</p>
+        <p class="integral-info blue" id="areaL">Área do retângulo L*h:</p>
+        <p class="integral-info orange" id="areaM">Área do retângulo M*h:</p>
     </div>
 </div>
 
@@ -280,9 +280,9 @@
 
         // Atualizando o valor da integral corretamente
         document.getElementById('integralValueText').innerHTML = `Valor da integral: ${(integralValue).toFixed(2)}`;  // Corrigir exibição da integral
-        document.getElementById('areaM').innerHTML = `Área do retângulo M: ${(areaM).toFixed(2)}`;
-        document.getElementById('areaL').innerHTML = `Área do retângulo L: ${(areaL).toFixed(2)}`;
-        document.getElementById('areaM_minus').innerHTML = `Área do retângulo m: ${(areaM_minus).toFixed(2)}`;
+        document.getElementById('areaM').innerHTML = `Área do retângulo  M*h: ${(areaM).toFixed(2)}`;
+        document.getElementById('areaL').innerHTML = `Área do retângulo L*h: ${(areaL).toFixed(2)}`;
+        document.getElementById('areaM_minus').innerHTML = `Área do retângulo m*h: ${(areaM_minus).toFixed(2)}`;
 
         if (Math.abs(areaL - integralValue) < 0.01) {
             document.getElementById('congratulationsMessage').innerHTML = "Parabéns! Você encontrou o valor da integral.";
