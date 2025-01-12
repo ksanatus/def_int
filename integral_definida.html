@@ -9,216 +9,249 @@
 
     <!-- CSS incorporado -->
     <style>
-        /* Estilo global (copiado da Página 1) */
+    /* Estilo global (copiado da Página 1) */
+    body {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
+        justify-content: flex-start;
+        background-color: #f0f4f8;
+    }
+
+    h1, h2, h3 {
+        font-family: 'Roboto', sans-serif;
+        color: #007bff;
+        margin: 10px 0;
+    }
+
+    h4 {
+        font-size: 1.5rem;
+        color: #000000;
+        margin-bottom: 30px;
+        text-align: left;
+    }
+
+    /* Estilo para a descrição */
+    .description {
+        background-color: #ffffff;
+        padding: 20px;
+        position: relative;
+        z-index: 1; /* Certifica-se de que a descrição ficará acima do painel lateral */
+        width: 100%;
+        height: 11%;
+        max-width: 100%; 
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        word-wrap: break-word;
+    }
+
+    /* Estilo para a estrutura principal */
+    .container {
+        display: flex;
+        justify-content: flex-start;
+        height: calc(100vh - 200px); /* Ajusta a altura do contêiner para levar em consideração a descrição no topo */
+        overflow: hidden;
+        margin-top: 0;
+    }
+
+    /* Painel lateral */
+    .sidebar {
+        width: 320px;
+        background-color: #ffffff;
+        padding: 20px;
+        overflow-y: auto;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        position: fixed;
+        top: 180px;
+        left: 0;
+        bottom: 0;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .sidebar h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #007bff;
+    }
+
+    .sidebar label {
+        font-size: 16px;
+        margin-top: 10px;
+        color: #555;
+    }
+
+    .sidebar input {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        font-size: 16px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+
+    button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 12px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Área do gráfico */
+    .graph-area {
+        margin-left: 350px; /* Deixe espaço para o painel lateral */
+        padding: 0 15px;
+        width: calc(100% - 320px);
+        height: calc(85vh - 80px);
+        overflow: hidden;
+    }
+
+    .graph-area h1 {
+        font-size: 28px;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .graph-area h2 {
+        font-size: 22px;
+        margin-bottom: 15px;
+        color: #555;
+    }
+
+    .graph-area h3 {
+        font-size: 18px;
+        color: #555;
+    }
+
+    .plot-limits {
+        display: flex;
+        flex-direction: row;
+        white-space: nowrap;
+    }
+
+    .plot-limits label {
+        font-size: 14px;
+        margin-right: 5px;
+    }
+
+    .plot-limits input {
+        width: 60px;
+        font-size: 14px;
+    }
+
+    .plot-limits input:nth-child(2) {
+        margin-right: 20px;
+    }
+
+    /* Navegação fixa no rodapé */
+    .footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #fff;
+        padding: 5px 0;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+    }
+
+    .footer button {
+        background-color: #007bff;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 18px;
+        transition: background-color 0.3s ease;
+    }
+
+    .footer button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Responsividade - Ajustes para telas menores (smartphones) */
+    @media (max-width: 768px) {
         body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 0;
-            justify-content: flex-start;
-            background-color: #f0f4f8;
+            padding: 0 10px; /* Adiciona um pequeno padding nas laterais */
         }
 
-        h1, h2, h3 {
-            font-family: 'Roboto', sans-serif;
-            color: #007bff;
-            margin: 10px 0;
-        }
-        h4 {
-            font-size: 1.5rem;
-            color: #000000;
-            margin-bottom: 30px;
-            text-align: left;
-        }
-        
-        /* Estilo para a descrição */
+        /* Descrição e contêiner */
         .description {
-            background-color: #ffffff;
-            padding: 20px;
-            position: relative;
-            z-index: 1; /* Certifica-se de que a descrição ficará acima do painel lateral */
-            width: 100%;
-            height: 11%;
-            max-width: 100%; 
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            word-wrap: break-word;
+            height: auto; /* Ajusta a altura da descrição para se adaptar ao conteúdo */
+            padding: 10px;
         }
 
-        /* Estilo para a estrutura principal */
-        /* Alteração no estilo para o contêiner principal */
         .container {
-            display: flex;
-            justify-content: flex-start;
-            height: calc(100vh - 200px); /* Ajusta a altura do contêiner para levar em consideração a descrição no topo */
-            overflow: hidden;
-            margin-top: 0; /* Remove o espaço adicional entre a descrição e o gráfico */
+            flex-direction: column; /* Empilha os elementos na vertical */
+            height: auto; /* Deixa a altura do contêiner ser flexível */
+            overflow: visible; /* Permite que o conteúdo transborde quando necessário */
         }
-            
-        /* Painel lateral (agora começa após a descrição) */
+
+        /* Sidebar */
         .sidebar {
-            width: 320px;
-            background-color: #ffffff;
-            padding: 20px;
-            overflow-y: auto;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            top: 180px; /* Começa após a descrição */
-            left: 0;
-            bottom: 0;
-            transition: transform 0.3s ease-in-out;
+            width: 100%;  /* Sidebar ocupa toda a largura em telas pequenas */
+            position: static;  /* Tira a posição fixa para permitir o layout responsivo */
+            margin-top: 20px;  /* Espaço superior entre o gráfico e o sidebar */
+            padding: 15px;
         }
 
-
-
-        .sidebar h2 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: #007bff;
-        }
-
-        .sidebar label {
-            font-size: 16px;
-            margin-top: 10px;
-            color: #555;
-        }
-
-        .sidebar input {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            font-size: 16px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-        }
-
-        button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 12px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        /* Área do gráfico (ajustar para ter espaço para o painel lateral) */
+        /* Gráfico */
         .graph-area {
-            margin-left: 350px; /* Deixe espaço para o painel lateral */
-            padding: 0 15px;
-            width: calc(100% - 320px);
-            height: calc(85vh - 80px); /* Ajusta a altura para ocupar toda a tela */
-            overflow: hidden;
+            margin-left: 0; /* Remove a margem esquerda */
+            width: 100%;   /* A área do gráfico ocupa 100% da largura */
+            height: auto;  /* Ajusta a altura automaticamente */
         }
 
+        /* Ajustes nos títulos */
         .graph-area h1 {
-            font-size: 28px;
-            margin-bottom: 20px;
-            color: #333;
+            font-size: 24px;  /* Reduz o tamanho do título principal */
         }
 
         .graph-area h2 {
-            font-size: 22px;
-            margin-bottom: 15px;
-            color: #555;
+            font-size: 18px;  /* Reduz o tamanho do subtítulo */
         }
 
         .graph-area h3 {
-            font-size: 18px;
-            color: #555;
+            font-size: 16px;  /* Reduz o tamanho do texto adicional */
         }
 
-        /* Responsividade (copiado da Página 1) */
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 250px;
-                transform: translateX(-100%);
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .graph-area {
-                margin-left: 0;
-                width: 100%;
-            }
-
-            .sidebar-toggle {
-                display: block;
-                background-color: #f4f4f4;
-                padding: 10px;
-                font-size: 18px;
-                position: absolute;
-                top: 20px;
-                left: 20px;
-                z-index: 999;
-                cursor: pointer;
-            }
-
-            .sidebar input {
-                font-size: 14px;
-            }
-
-            .graph-area h1 {
-                font-size: 24px;
-            }
-
-            .graph-area h2 {
-                font-size: 20px;
-            }
-        }
-        .plot-limits {
-            display: flex;
-            flex-direction: row; /* Espacamento entre os elementos */
-            white-space: nowrap;
-        }
-
-        .plot-limits label {
-            font-size: 14px; /* Ajusta o tamanho da fonte do rótulo */
-            margin-right: 5px; /* Adiciona um espaço entre o rótulo e o input */
-        }
-
-        .plot-limits input {
-            width: 60px; /* Ajusta a largura da caixa de entrada */
-            font-size: 14px; /* Tamanho da fonte do input */
-        }
-        /* Adiciona o espaço entre as caixas, mas não entre os rótulos */
-        .plot-limits input:nth-child(2) {
-            margin-right: 20px; /* Espaçamento entre as duas caixas de entrada */
-        }
-        /* Navegação fixa no rodapé */
         .footer {
-            position: fixed;
-            bottom: 0;  /* Posiciona os botões no fundo da tela */
-            left: 0;
-            width: 100%;  /* Garante que os botões ocupem toda a largura da tela */
-            background-color: #fff;
-            padding: 5px 0;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.2);
-            z-index: 1000;  /* Coloca os botões acima de outros elementos */
+            flex-direction: column; /* Coloca os botões um abaixo do outro */
+            gap: 5px; /* Reduz o espaço entre os botões */
         }
 
         .footer button {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 18px;
-            transition: background-color 0.3s ease;
+            width: 100%; /* Botões ocupam 100% da largura disponível */
+            padding: 12px;
+            font-size: 16px;
         }
 
-        .footer button:hover {
-            background-color: #0056b3;
+        /* Plot limits - Ajusta para facilitar a interação em telas pequenas */
+        .plot-limits {
+            flex-direction: column; /* Empilha os inputs verticalmente */
+            align-items: center;
         }
+
+        .plot-limits input {
+            width: 80%; /* Ajusta a largura dos inputs */
+            margin-bottom: 10px; /* Adiciona espaçamento entre os inputs */
+        }
+
+        .plot-limits input:nth-child(2) {
+            margin-right: 0; /* Remove o espaço entre os inputs */
+        }
+    }
+
 
     </style>
 
