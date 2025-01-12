@@ -340,7 +340,8 @@
                 yanchor: 'top',
                 overflow: 'visible'
             },
-            responsive: true  // Habilita responsividade
+            responsive: true,
+            showlegend: false// Habilita responsividade
         };
 
         let areaTrace = {};
@@ -380,7 +381,8 @@
                 type: 'scatter',
                 mode: 'lines',
                 name: `Reta Secante (m = ${secanteLine.m.toFixed(2)})`,
-                line: { color: 'red', dash: 'dot' }
+                line: { color: 'red', dash: 'dot' },
+                showlegend: false
             };
         } else {
             let tangenteLine = tangente(x, evaluateFunction);
