@@ -8,11 +8,12 @@
 
 <!-- Código do estilo -->
 <style>
+    /* Estilo básico da página para telas grandes */
     body {
         font-family: 'Roboto', sans-serif;
         background-color: #f4f7fc;
         display: flex;
-        justify-content: flex-start;  
+        justify-content: flex-start;
         padding: 40px;
         margin: 0;
         flex-wrap: nowrap;  
@@ -54,7 +55,7 @@
     #main-content {
         display: flex;
         flex-direction: row;
-        flex-grow: 1;  
+        flex-grow: 1;
     }
 
     #graph {
@@ -64,19 +65,19 @@
     }
 
     #integralValues {
-        font-size: 14px; /* Define um tamanho fixo para a fonte */
-        line-height: 1.5; /* Ajusta o espaçamento entre as linhas */
+        font-size: 10px;
+        line-height: 1.5;
         margin-top: 25px;
         text-align: center;
         background-color: #ffffff;
         padding: 10px;
         border-radius: 12px;
         box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-        max-width: 320px; /* Limita a largura do painel */
-        height: auto; /* Ajusta a altura automaticamente */
-        max-height: 200px; /* Limita a altura do painel lateral */
-        overflow: hidden; /* Impede que o conteúdo ultrapasse o painel */
-        word-wrap: break-word; /* Quebra palavras longas para evitar ultrapassar a largura */
+        max-width: 320px;
+        height: auto;
+        max-height: 200px;
+        overflow: hidden;
+        word-wrap: break-word;
         overflow-wrap: break-word;
     }
 
@@ -95,6 +96,85 @@
         font-weight: bold;
         margin-top: 20px;
     }
+
+/* Responsividade para telas pequenas (smartphones) */
+@media (max-width: 768px) {
+    /* Ajustes gerais para dispositivos móveis */
+    body {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        margin: 0; /* Remover margem para que o layout ocupe toda a tela */
+    }
+
+    h2 {
+        font-size: 1.6rem; /* Tamanho menor do título */
+        margin-bottom: 15px; /* Menos margem para otimizar o espaço */
+        text-align: center; /* Centraliza o título para melhor visualização */
+    }
+
+    /* Sidebar ocupa 100% da largura em telas pequenas */
+    #sidebar {
+        width: 100%;
+        margin-bottom: 15px; /* Menos espaçamento entre o sidebar e o conteúdo */
+        box-shadow: none; /* Remove a sombra na versão mobile */
+        padding: 12px; /* Reduz o padding para ganhar mais espaço */
+    }
+
+    #main-content {
+        flex-direction: column; /* Empilha os elementos verticalmente */
+        width: auto; /* Garante que o conteúdo ocupe toda a largura disponível */
+        margin-top: 15px; /* Reduz o espaço superior entre o sidebar e o gráfico */
+        flex-wrap: wrap;
+    }
+
+    /* Ajusta o gráfico para garantir que ele ocupe toda a largura e se ajuste bem */
+    #graph {
+        display: flex;
+        width: 100% !important;  /* Garante que ocupe toda a largura */
+        max-width: 100% !important; /* Impede que o gráfico ultrapasse a largura da tela */
+        height: auto !important;  /* Altura automática para se ajustar ao tamanho */
+        max-height: 300px;  /* Limita a altura do gráfico */
+        object-fit: contain;  /* Ajusta o gráfico para se manter proporcional */
+        margin-bottom: 20px;  /* Espaçamento entre o gráfico e os outros elementos */
+    }
+
+    /* Ajustes no painel de valores integrais */
+    #integralValues {
+        max-width: 100%; /* Painel ocupa 100% da largura */
+        padding: 15px; /* Ajusta o padding para dar mais espaço */
+        font-size: 14px; /* Reduz o tamanho da fonte para que o conteúdo caiba melhor */
+        height: auto; /* Ajusta a altura automaticamente */
+        max-height: 250px; /* Limita a altura do painel para não ocupar muito espaço */
+        overflow-y: auto; /* Se o conteúdo ultrapassar o limite, aparece uma barra de rolagem */
+    }
+
+    .integral-info {
+        font-size: 8px; /* Tamanho menor da fonte para os valores de integral */
+        margin-bottom: 8px; /* Menos espaço entre os itens de integral */
+    }
+
+    .message {
+        font-size: 14px; /* Ajuste no tamanho da fonte da mensagem */
+    }
+
+    /* Botões ocupam 100% da largura e têm altura ajustada para não ocupar espaço demais */
+    button {
+        width: 100%; 
+        padding: 10px; /* Menos padding para ganhar mais espaço */
+        font-size: 10px; /* Ajuste no tamanho da fonte */
+        margin-top: 10px; /* Adiciona um pequeno espaçamento entre os botões */
+        box-sizing: border-box; /* Garante que o padding seja incluído no tamanho total */
+    }
+
+    /* Ajusta o layout geral */
+    #main-content {
+        display: block; /* Faz com que o conteúdo ocupe o máximo possível */
+        padding-bottom: 80px; /* Adiciona um padding no final para garantir que o conteúdo não fique sobreposto ao rodapé */
+    }
+}
+
+
 </style>
 
 <!-- Conteúdo -->
@@ -190,13 +270,18 @@
         };
 
         let layout1 = {
-            xaxis: { title: 'x' },
-            yaxis: { title: 'y' },
-            shapes: [],
-            width: 1000, 
-            height: 600
-        };
-
+    xaxis: { title: 'x' },
+    yaxis: { title: 'y' },
+    shapes: [],
+    autosize: true,    // Garante que o gráfico se redimensione automaticamente
+    responsive: true,  // Faz o gráfico se ajustar automaticamente às mudanças no tamanho da tela
+    margin: {
+        t: 30, // Margem superior
+        b: 30, // Margem inferior
+        l: 30, // Margem esquerda
+        r: 30  // Margem direita
+    }
+};
         // Adiciona a área de F(x) em azul
         let numSteps = 1000;
         let stepSize = (x2 - x1) / numSteps;
@@ -295,4 +380,5 @@
 
         updateGraphs(); // Inicializa com o gráfico e cálculos atualizados
     };
+    window.addEventListener('resize', function() { var graphDiv = document.getElementById('graph'); Plotly.Plots.resize(graphDiv); });
 </script>
