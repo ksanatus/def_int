@@ -1,3 +1,4 @@
+
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/nouislider@14.7.0/distribute/nouislider.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.0.0/math.js"></script>
@@ -92,6 +93,28 @@
         font-weight: bold;
         margin-top: 20px;
     }
+
+    .slider-container {
+    margin-bottom: 20px;
+    width: 100%;  /* Garantir que o slider ocupe todo o espaço disponível */
+    }
+
+    .slider-container label {
+        font-size: 14px;
+        color: #333;
+        display: block;  /* Garantir que o label ocupe toda a linha */
+    }
+
+    .slider-container span {
+        font-size: 18px;
+        font-weight: bold;
+        display: inline-block;
+        margin-top: 10px;
+    }
+
+    .slider-container #xSlider, .slider-container #hSlider {
+    width: 100%; /* Garantir que os sliders tenham 100% de largura disponível */
+    }
 </style>
 
 <!-- Conteúdo -->
@@ -102,21 +125,19 @@
         <button onclick="updateFunction()">Atualizar Função</button>
     </div>
     <div id="sliders">
+        <!-- Slider para o valor de x -->
         <div class="slider-container">
             <label for="xSlider">Limite inferior x:</label>
             <span id="xValue">1</span><br>
             <div id="xSlider"></div>
         </div>
+        <!-- Slider para o valor de h -->
         <div class="slider-container">
             <label for="hSlider">Valor de h:</label>
-            <span id="hValue">2</span><br>
+            <span id="hValue">2</span><br> <!-- Defina um valor inicial para hValue -->
             <div id="hSlider"></div>
         </div>
     </div>
-    <!--
-    <div id="integralValues">
-        <div id="integralExpression"></div>
-    </div> -->
 </div>
 
 <div id="main-content">
@@ -125,9 +146,7 @@
 
 <script>
     // Função para calcular a integral definida no intervalo [x, x+h]
-    // Função para calcular a integral definida no intervalo [x, x+h]
     function integralNumerica(func, x, h, n = 10000) {
-        // Se h for muito pequeno, aproximamos a integral por f(x)
         if (h < 0.0001) { 
             return func(x);  // Aproximação de f(x) para h muito pequeno
         }
@@ -147,12 +166,10 @@
     // Atualizar a função a partir do input do usuário
     function updateFunction() {
         funcString = document.getElementById('functionInput').value;
-        try {
+
             f = math.parse(funcString).compile(); 
             updateGraphs();
-        } catch (e) {
-            alert('Função inválida');
-        }
+
     }
 
     // Função para avaliar a função
@@ -160,12 +177,38 @@
         return f.evaluate({ x: x });
     }
 
+    // Função para calcular a reta tangente
+    function tangente(x, f) {
+        let y = f(x); // f(x0)
+        let derivative = math.derivative(funcString, 'x'); // Derivada de f(x)
+        let fPrime = derivative.evaluate({ x: x }); // f'(x0)
+
+        // Equação da reta tangente: y = f'(x0) * (x - x0) + f(x0)
+        let tangenteX = [x - 2, x - 1, x, x + 1, x + 2]; // Estendendo a reta para o lado esquerdo e direito
+        let tangenteY = tangenteX.map(xi => fPrime * (xi - x) + y); // Calculando y para os valores de x
+
+        return { tangenteX, tangenteY };
+    }
+
+    // Função para calcular a reta secante
+    function secante(x, h, f) {
+        let y1 = f(x);
+        let y2 = f(x + h);
+
+        // Cálculo da inclinação
+        let m = (y2 - y1) / h;
+
+        // Pontos da reta secante
+        let extendedX = [x - 1, x, x + h, x + h + 1];
+        let extendedY = extendedX.map(xi => m * (xi - x) + y1);  // Equação da reta secante: y = m * (x - x1) + y1
+
+        return { secanteX: extendedX, secanteY: extendedY, m };  // Retorna os pontos estendidos da reta
+    }
+
     // Atualizar gráficos e cálculos
     function updateGraphs() {
-        // Cálculo da integral no intervalo [x, x+h]
         let integralValue = integralNumerica(evaluateFunction, x, h);
 
-        // Atualizar o gráfico com a função f(x)
         let xValues = [];
         let fValues = [];
         for (let i = 0; i <= 10; i += 0.1) {
@@ -183,13 +226,32 @@
         };
 
         let layout1 = {
-            xaxis: { title: 'x' },
-            yaxis: { title: 'f(x)' },
-            width: 1000,
-            height: 600
+            xaxis: {
+                title: 'x',
+                range: [0, 12]
+            },
+            yaxis: {
+                title: 'f(x)'
+            },
+            width: 1300,
+            height: 600,
+            margin: {
+                r: 200,
+                t: 50,
+                b: 50,
+                l: 50
+            },
+            legend: {
+                x: 1,
+                y: 1,
+                traceorder: 'normal',
+                orientation: 'v',
+                xanchor: 'left',
+                yanchor: 'top',
+                overflow: 'visible'
+            }
         };
 
-        // Desenhando a área entre f(x) e o eixo x no intervalo [x, x+h]
         let areaTrace = {};
         if (h > 0) {
             let numSteps = 1000;
@@ -208,28 +270,47 @@
                 fill: 'tozeroy',
                 type: 'scatter',
                 fillcolor: 'rgba(0, 123, 255, 0.3)',
-                line: { color: 'rgba(0, 123, 255, 0.3)' }
+                line: { color: 'rgba(0, 123, 255, 0.3)' },
+                showlegend: false
             };
         }
 
-        // Desenhando a linha tracejada nos limites de integração
         let dashedLines = [];
-        let xLine1 = { x: [x, x], y: [0, evaluateFunction(x)], line: { color: 'black', dash: 'dash' } };
-        let xLine2 = { x: [x + h, x + h], y: [0, evaluateFunction(x + h)], line: { color: 'black', dash: 'dash' } };
+        let xLine1 = { x: [x, x], y: [0, evaluateFunction(x)], line: { color: 'black', dash: 'dash' }, showlegend: false };
+        let xLine2 = { x: [x + h, x + h], y: [0, evaluateFunction(x + h)], line: { color: 'black', dash: 'dash' }, showlegend: false };
         dashedLines.push(xLine1, xLine2);
 
-        // Atualizando o gráfico com as linhas tracejadas
-        Plotly.react('graph', [trace1, areaTrace, ...dashedLines], layout1);
+        let secanteTrace = null;
+        if (h > 0) {
+            let secanteLine = secante(x, h, evaluateFunction);
+            secanteTrace = {
+                x: secanteLine.secanteX,
+                y: secanteLine.secanteY,
+                type: 'scatter',
+                mode: 'lines',
+                name: `Reta Secante (m = ${secanteLine.m.toFixed(2)})`,
+                line: { color: 'red', dash: 'dot' }
+            };
+        } else {
+            let tangenteLine = tangente(x, evaluateFunction);
+            secanteTrace = {
+                x: tangenteLine.tangenteX,
+                y: tangenteLine.tangenteY,
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Reta Tangente',
+                line: { color: 'green', dash: 'solid' }
+            };
+        }
 
-        // Exibir a integral no painel lateral
-        document.getElementById('integralExpression').innerHTML = `$$\\int_{${x.toFixed(2)}}^{${(x + h).toFixed(2)}} f(x) \\, dx = ${integralValue.toFixed(2)}$$`;
+        Plotly.react('graph', [trace1, areaTrace, ...dashedLines, secanteTrace], layout1);
 
-        // Forçar renderização do MathJax para as novas expressões
-        MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.body]);  
+
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.body]);
     }
 
     window.onload = function() {
-        // Slider para o limite inferior x
+        // Inicialização do slider de x
         let xSlider = document.getElementById('xSlider');
         let xValueDisplay = document.getElementById('xValue');
         noUiSlider.create(xSlider, {
@@ -243,7 +324,7 @@
             updateGraphs();
         });
 
-        // Slider para o valor de h
+        // Inicialização do slider de h
         let hSlider = document.getElementById('hSlider');
         let hValueDisplay = document.getElementById('hValue');
         noUiSlider.create(hSlider, {
@@ -257,6 +338,6 @@
             updateGraphs();
         });
 
-        updateGraphs(); // Inicializa com o gráfico e cálculos atualizados
+        updateGraphs(); // Atualizar gráficos na inicialização
     };
 </script>
