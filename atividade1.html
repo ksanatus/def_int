@@ -8,6 +8,7 @@
 
 <!-- Código do estilo -->
 <style>
+    /* Estilo básico da página para telas grandes */
     body {
         font-family: 'Roboto', sans-serif;
         background-color: #f3f4f6;
@@ -135,6 +136,134 @@
         font-weight: bold;
         margin-top: 20px;
     }
+
+ /* Responsividade para telas pequenas (smartphones) */
+@media (max-width: 768px) {
+    /* Ajustes gerais para dispositivos móveis */
+    body {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        margin: 0; /* Adicionando margem 0 para eliminar qualquer espaçamento indesejado */
+    }
+
+    h2 {
+        font-size: 1.8rem; /* Reduz o tamanho do título */
+        margin-bottom: 20px;
+        text-align: center; /* Centraliza o título */
+    }
+
+    /* Sidebar ocupa 100% da largura em telas pequenas */
+    #sidebar {
+        width: 100%; 
+        margin-bottom: 20px; /* Espaçamento entre o sidebar e o conteúdo */
+        box-shadow: none; /* Remove a sombra na versão mobile */
+    }
+
+    #main-content {
+        max-width: 100%; /* Usa toda a largura disponível */
+        margin-top: 20px; /* Espaçamento superior */
+        display: block; /* Faz o conteúdo ocupar a largura disponível */
+        flex-wrap: wrap;
+    }
+
+    /* Ajuste o gráfico para que ele ocupe toda a largura disponível e diminui sua altura */
+    #graph {
+        width: 100%;
+        height: auto; /* Garante que o gráfico mantenha a proporção */
+        max-height: 300px; /* Limita a altura do gráfico */
+        object-fit: contain; /* Faz o gráfico se ajustar dentro do contêiner */
+        margin-bottom: 20px; /* Espaçamento entre o gráfico e os outros elementos */
+    }
+
+    /* Sliders e inputs ocupam toda a largura disponível */
+    #sliders {
+        margin-top: 10px;
+        width: 100%; 
+    }
+
+    .slider-container {
+        width: 100%; /* Sliders ocupam toda a largura */
+        margin: 10px 0;
+    }
+
+    /* Inputs ocupam 100% da largura */
+    input[type="text"] {
+        width: 100%; 
+        padding: 10px;
+        font-size: 14px; /* Reduz o tamanho da fonte */
+    }
+
+    /* Botões ocupam 100% da largura e têm altura ajustada para não ocupar espaço demais */
+    button {
+        width: 100%; 
+        padding: 10px; /* Menos padding para ganhar mais espaço */
+        font-size: 10px; /* Ajuste no tamanho da fonte */
+        margin-top: 10px; /* Adiciona um pequeno espaçamento entre os botões */
+        box-sizing: border-box; /* Garante que o padding seja incluído no tamanho total */
+    }
+
+    /* Ajustes no painel de valores integrais */
+    #integralValues {
+        padding: 15px; /* Ajusta o padding */
+        font-size: 16px; /* Reduz o tamanho da fonte */
+        margin-bottom: 30px; /* Adiciona mais espaçamento inferior para não sobrepor o gráfico */
+    }
+
+    .integral-info {
+        font-size: 14px; /* Tamanho menor para dispositivos móveis */
+    }
+
+    .message {
+        font-size: 16px; /* Ajuste no tamanho da mensagem */
+    }
+
+    /* Rodapé fixo com menos altura em telas pequenas */
+    .footer {
+        position: fixed; /* Botões fixos no rodapé */
+        bottom: 0;
+        left: 0;
+        width: 100%; 
+        background-color: #fff;
+        padding: 8px 0; /* Menos padding para economizar espaço */
+        display: flex;
+        justify-content: center;
+        gap: 10px; /* Espaçamento entre os botões */
+        box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.2); /* Sombra sutil */
+    }
+
+    .footer button {
+        width: 45%; /* Botões ocupam menos largura para que fiquem mais compactos */
+        padding: 10px;
+        font-size: 14px; /* Fonte menor para caber melhor no espaço */
+    }
+
+    /* Ajustes nas abas (tabs) */
+    .tabs {
+        flex-direction: column; /* Abas empilhadas em telas pequenas */
+        padding: 10px 0;
+    }
+
+    .tab {
+        width: 100%; /* Abas ocupam toda a largura */
+        padding: 10px;
+        margin-right: 0;
+        margin-bottom: 10px;
+        text-align: center; /* Centraliza o texto nas abas */
+    }
+
+    .tab.active {
+        background-color: #0056b3; /* Mantém a cor do fundo para a aba ativa */
+    }
+
+    /* Conteúdo das abas */
+    .activity-content {
+        margin-top: 20px;
+        padding: 10px;
+    }
+}
+
+
 </style>
 
 <!-- Conteúdo do código -->
@@ -237,7 +366,7 @@
         };
 
         let layout = {
-            title: 'Função f(x) e Áreas Correspondentes',
+            title: 'Função f(x)',
             xaxis: { title: 'x' },
             yaxis: { title: 'y' },
             shapes: [
