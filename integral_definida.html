@@ -180,7 +180,7 @@
     }
 
     /* Responsividade - Ajustes para telas menores (smartphones) */
-   @media (max-width: 768px) {
+    @media (max-width: 768px) {
         body {
             display: flex;
             flex-direction: column; /* Alinha todos os elementos verticalmente */
@@ -211,11 +211,13 @@
 
         /* Gráfico */
         .graph-area {
-            height: 300px;  /* Ajusta a altura dos gráficos para telas menores */
-            margin-top: 20px; /* Ajusta o espaçamento superior */
-            overflow: hidden; /* Impede que o gráfico ultrapasse o contêiner */
-            flex-grow: 1; /* Faz o gráfico crescer e ocupar o espaço disponível */
-        }
+
+        width: 100%;
+        height: auto; /* Garante que o gráfico mantenha a proporção */
+        max-height: 300px; /* Limita a altura do gráfico */
+        object-fit: contain; /* Faz o gráfico se ajustar dentro do contêiner */
+        margin-bottom: 20px; /* Espaçamento entre o gráfico e os outros elementos */
+    }
 
         /* Ajustes nos títulos */
         .graph-area h1 {
@@ -610,6 +612,7 @@
                 plotGraph(funcExpr);
             });
         });
+        window.addEventListener('resize', function() { var graphDiv = document.getElementById('graph'); Plotly.Plots.resize(graphDiv); });
     </script>
 </body>
 </html>
