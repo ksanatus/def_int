@@ -299,6 +299,11 @@
         <input type="text" id="functionInput" value="x^2">
         <button onclick="updateFunction()">Atualizar Função</button>
     </div>
+    <div class="input-section">
+        <label for="pfunctionInput">Digite a primitiva F(x):</label>
+        <input type="text" id="pfunctionInput" value="(x^2)/2">
+        <button onclick="updatepFunction()">Atualizar Primitiva</button>
+    </div>
 
     <!-- Sliders -->
     <div id="sliders">
@@ -366,9 +371,26 @@
         return f.evaluate({ x: x });
     }
 
+    let pfuncString = "(x^2)/2"; // Função padrão
+    let pf = math.parse(pfuncString).compile(); // Compilar a função de entrada
+
+        // Atualizar a função a partir do input do usuário
+        function updatepFunction() {
+        pfuncString = document.getElementById('pfunctionInput').value;
+        console.log("Primitiva atualizada:", pfuncString); // Verificação
+        try {
+            pf = math.parse(pfuncString).compile(); // Recompila a função usando math.js
+            updateGraphs();  // Atualiza os gráficos
+        } catch (e) {
+            alert('Função inválida');
+        }
+    }
+
     // Função para calcular a primitiva de f(x)
     function calcularPrimitiva(x) {
-        return integralNumerica(evaluateFunction, 0, x);
+    let result = pf.evaluate({ x: x });
+
+    return result;
     }
 
     // Atualizar gráficos
