@@ -540,7 +540,7 @@
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub, titleElement]); // Garante que o MathJax renderize o LaTeX
             }
 
-            function startAnimation() {
+   /*         function startAnimation() {
                 if (isPlaying) return;
 
                 isPlaying = true;
@@ -566,7 +566,40 @@
 
             playButton.addEventListener('click', () => {
                 startAnimation();
-            });
+            }); */
+            function startAnimation() {
+            if (!isPlaying) return; // Só continua se estiver "play"
+
+            intervalId = setInterval(() => {
+                if (numRectangles < parseInt(maxRectanglesInput.value)) {
+                    numRectangles++;
+                    numRectanglesValue.textContent = numRectangles;
+                    numRectanglesInput.value = numRectangles;
+
+                    const funcExpr = functionInput.value.trim();
+                    plotGraph(funcExpr);
+                } else {
+                    clearInterval(intervalId);
+                    isPlaying = false;
+                    playButton.textContent = "Play"; // Muda para "Play" quando terminar
+                }
+            }, 200);
+        }
+
+            // Lógica para alternar entre Play e Pause
+            playButton.addEventListener('click', () => {
+                if (isPlaying) {
+                    // Se estiver em "play", pausa a animação
+                    clearInterval(intervalId);
+                    isPlaying = false;
+                    playButton.textContent = "Play"; // Muda o texto do botão para "Play"
+                } else {
+                    // Se estiver em "pause", retoma a animação
+                    isPlaying = true;
+                    playButton.textContent = "Pause"; // Muda o texto do botão para "Pause"
+                    startAnimation(); // Inicia a animação
+                }
+            });            
 
             functionInput.addEventListener('input', () => {
                 const funcExpr = functionInput.value.trim();
