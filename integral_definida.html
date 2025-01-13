@@ -468,7 +468,7 @@
                     mode: 'lines',
                     line: { color: 'blue' }
                 }];
-                Plotly.react('plot', plotData, layout).then(function() {
+                Plotly.newPlot('plot', plotData, layout).then(function() {
                     const zoomX = Plotly.d3.select('#plot').node().layout.xaxis.range;
                     const zoomY = Plotly.d3.select('#plot').node().layout.yaxis.range;
                     currentZoomX = zoomX || currentZoomX;
