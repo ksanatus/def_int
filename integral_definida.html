@@ -225,16 +225,31 @@
             font-size: 16px;  /* Reduz o tamanho do texto adicional */
         }
 
-        .footer {
-            flex-direction: column; /* Coloca os botões um abaixo do outro */
-            gap: 5px; /* Reduz o espaço entre os botões */
-        }
+    /* Ajustes no rodapé */
+    .footer {
+        display: flex;
+        flex-direction: column; /* Empilha os botões na vertical */
+        gap: 5px; /* Menor espaçamento entre os botões */
+        position: relative;
+        bottom: 0;
+        width: 100%;
+        box-sizing: border-box;
+        margin-top: auto; /* Empurra o rodapé para o fundo da tela */
+    }
 
-        .footer button {
-            width: 100%; /* Botões ocupam 100% da largura disponível */
-            padding: 12px;
-            font-size: 16px;
-        }
+    .footer button {
+        width: 100%; /* Botões ocupam 100% da largura disponível */
+        padding: 12px;
+        font-size: 16px;
+    }
+
+    /* Ajusta o layout do conteúdo para não sobrepor o rodapé */
+    #main-content {
+        flex: 1;
+        padding-bottom: 80px; /* Espaçamento para garantir que o rodapé não sobreponha */
+        box-sizing: border-box;
+        overflow: auto; /* Permite rolagem quando necessário */
+    }
 
         /* Plot limits - Ajusta para facilitar a interação em telas pequenas */
         .plot-limits {
