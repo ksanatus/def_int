@@ -180,9 +180,13 @@
     }
 
     /* Responsividade - Ajustes para telas menores (smartphones) */
-    @media (max-width: 768px) {
+   @media (max-width: 768px) {
         body {
-            padding: 0 10px; /* Adiciona um pequeno padding nas laterais */
+            display: flex;
+            flex-direction: column; /* Alinha todos os elementos verticalmente */
+            padding: 10px;
+            min-height: 100vh; /* Garante que o conteúdo ocupe toda a altura da tela */
+            box-sizing: border-box;
         }
 
         /* Descrição e contêiner */
@@ -192,24 +196,25 @@
         }
 
         .container {
-            flex-direction: column; /* Empilha os elementos na vertical */
-            height: auto; /* Deixa a altura do contêiner ser flexível */
-            overflow: visible; /* Permite que o conteúdo transborde quando necessário */
+            flex: 1;
+        padding-bottom: 80px; /* Espaçamento para garantir que o rodapé não sobreponha */
+        box-sizing: border-box;
+        overflow: auto; /* Permite rolagem quando necessário */
         }
 
         /* Sidebar */
         .sidebar {
-            width: 100%;  /* Sidebar ocupa toda a largura em telas pequenas */
-            position: static;  /* Tira a posição fixa para permitir o layout responsivo */
-            margin-top: 20px;  /* Espaço superior entre o gráfico e o sidebar */
-            padding: 15px;
+            width: 100%;  /* Sidebar ocupa 100% da largura em telas pequenas */
+        margin-right: 0;
+        margin-bottom: 20px;  /* Espaçamento inferior para o sidebar */
         }
 
         /* Gráfico */
         .graph-area {
-            margin-left: 0; /* Remove a margem esquerda */
-            width: 100%;   /* A área do gráfico ocupa 100% da largura */
-            height: auto;  /* Ajusta a altura automaticamente */
+            height: 300px;  /* Ajusta a altura dos gráficos para telas menores */
+            margin-top: 20px; /* Ajusta o espaçamento superior */
+            overflow: hidden; /* Impede que o gráfico ultrapasse o contêiner */
+            flex-grow: 1; /* Faz o gráfico crescer e ocupar o espaço disponível */
         }
 
         /* Ajustes nos títulos */
@@ -251,7 +256,6 @@
             margin-right: 0; /* Remove o espaço entre os inputs */
         }
     }
-
 
     </style>
 
