@@ -202,6 +202,7 @@
         overflow: auto; /* Permite rolagem quando necessário */
         }
 
+
         /* Sidebar */
         .sidebar {
             width: 100%;  /* Sidebar ocupa 100% da largura em telas pequenas */
@@ -213,9 +214,10 @@
         .graph-area {
 
         width: 100%;
-        height: auto; /* Garante que o gráfico mantenha a proporção */
+        height: 60vh; /* Garante que o gráfico mantenha a proporção */
         max-height: 300px; /* Limita a altura do gráfico */
         object-fit: contain; /* Faz o gráfico se ajustar dentro do contêiner */
+        overflow-y: auto;
         margin-bottom: 20px; /* Espaçamento entre o gráfico e os outros elementos */
     }
 
