@@ -180,59 +180,59 @@
     }
 
     /* Responsividade - Ajustes para telas menores (smartphones) */
-    @media (max-width: 768px) {
-        body {
-            display: flex;
-            flex-direction: column; /* Alinha todos os elementos verticalmente */
-            padding: 10px;
-            min-height: 100vh; /* Garante que o conteúdo ocupe toda a altura da tela */
-            box-sizing: border-box;
-        }
+ /* Responsividade - Ajustes para telas menores (smartphones) */
+@media (max-width: 768px) {
+    body {
+        display: flex;
+        flex-direction: column; /* Alinha todos os elementos verticalmente */
+        padding: 10px;
+        min-height: 100vh; /* Garante que o conteúdo ocupe toda a altura da tela */
+        box-sizing: border-box;
+        overflow-y: auto; /* Permite rolagem na página */
+    }
 
-        /* Descrição e contêiner */
-        .description {
-            height: auto; /* Ajusta a altura da descrição para se adaptar ao conteúdo */
-            padding: 10px;
-        }
+    /* Descrição e contêiner */
+    .description {
+        height: auto; /* Ajusta a altura da descrição para se adaptar ao conteúdo */
+        padding: 10px;
+    }
 
-        .container {
-            flex: 1;
+    .container {
+        flex: 1;
         padding-bottom: 80px; /* Espaçamento para garantir que o rodapé não sobreponha */
         box-sizing: border-box;
         overflow: auto; /* Permite rolagem quando necessário */
-        }
+    }
 
-
-        /* Sidebar */
-        .sidebar {
-            width: 100%;  /* Sidebar ocupa 100% da largura em telas pequenas */
+    /* Sidebar */
+    .sidebar {
+        width: 100%;  /* Sidebar ocupa 100% da largura em telas pequenas */
         margin-right: 0;
         margin-bottom: 20px;  /* Espaçamento inferior para o sidebar */
-        }
+    }
 
-        /* Gráfico */
-        .graph-area {
-
+    /* Gráfico */
+    .graph-area {
         width: 100%;
         height: 60vh; /* Garante que o gráfico mantenha a proporção */
-        max-height: 300px; /* Limita a altura do gráfico */
+        max-height: 400px; /* Limita a altura do gráfico */
         object-fit: contain; /* Faz o gráfico se ajustar dentro do contêiner */
         overflow-y: auto;
         margin-bottom: 20px; /* Espaçamento entre o gráfico e os outros elementos */
     }
 
-        /* Ajustes nos títulos */
-        .graph-area h1 {
-            font-size: 24px;  /* Reduz o tamanho do título principal */
-        }
+    /* Ajustes nos títulos */
+    .graph-area h1 {
+        font-size: 24px;  /* Reduz o tamanho do título principal */
+    }
 
-        .graph-area h2 {
-            font-size: 18px;  /* Reduz o tamanho do subtítulo */
-        }
+    .graph-area h2 {
+        font-size: 18px;  /* Reduz o tamanho do subtítulo */
+    }
 
-        .graph-area h3 {
-            font-size: 16px;  /* Reduz o tamanho do texto adicional */
-        }
+    .graph-area h3 {
+        font-size: 16px;  /* Reduz o tamanho do texto adicional */
+    }
 
     /* Ajustes no rodapé */
     .footer {
@@ -246,21 +246,22 @@
         font-size: 16px;
     }
 
-        /* Plot limits - Ajusta para facilitar a interação em telas pequenas */
-        .plot-limits {
-            flex-direction: column; /* Empilha os inputs verticalmente */
-            align-items: center;
-        }
-
-        .plot-limits input {
-            width: 80%; /* Ajusta a largura dos inputs */
-            margin-bottom: 10px; /* Adiciona espaçamento entre os inputs */
-        }
-
-        .plot-limits input:nth-child(2) {
-            margin-right: 0; /* Remove o espaço entre os inputs */
-        }
+    /* Plot limits - Ajusta para facilitar a interação em telas pequenas */
+    .plot-limits {
+        flex-direction: column; /* Empilha os inputs verticalmente */
+        align-items: center;
     }
+
+    .plot-limits input {
+        width: 80%; /* Ajusta a largura dos inputs */
+        margin-bottom: 10px; /* Adiciona espaçamento entre os inputs */
+    }
+
+    .plot-limits input:nth-child(2) {
+        margin-right: 0; /* Remove o espaço entre os inputs */
+    }
+}
+
 
     </style>
 
